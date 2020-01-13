@@ -15,5 +15,6 @@ int     main(int ac, char **av)
         ft_putendl("ERROR parsing file");
 		return (0);
     }
+    //run();
     return (0);
 }
