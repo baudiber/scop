@@ -1,0 +1,8 @@
+*.swo
+fillit
+*/*.o
+*.o
+*.swp
+*/*.swp
+*.gch
+*.a
