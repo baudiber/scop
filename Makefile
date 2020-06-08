@@ -6,7 +6,7 @@
 #    By: baudiber <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/13 12:30:36 by baudiber          #+#    #+#              #
-#    Updated: 2020/01/13 12:35:32 by baudiber         ###   ########.fr        #
+#    Updated: 2020/06/08 15:42:24 by baudiber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ SRC			=	main.c							\
 				glad.c							\
 				engine/init.c					\
 				engine/run.c					\
+				inputs/process_inputs.c \
 				parser/read_file.c
 
 R			=	\033[31m
@@ -29,11 +30,11 @@ B			=	\033[34m
 W			=	\033[0m
 O			=	\033[33m
 
-CC 			=	gcc
+CC 			=	clang
 FLAGS		=	-Wall -Werror -Wextra
-INCLUDES	=	-I $(INC_DIR) `sdl2-config --cflags`
+INCLUDES	=	-I $(INC_DIR) `pkg-config --cflags glfw3`
 HEADER_H	=	$(INC_DIR)/$(NAME).h
-LIBS		=	-L $(LIBFT_DIR) -lft `sdl2-config --libs`
+LIBS		=	-L $(LIBFT_DIR) -lft `pkg-config --static --libs glfw3` -framework OpenGL -framework Appkit
 OBJ 		=	$(addprefix $(OBJ_DIR)/,$(SRC:.c=.o))
 
 all: art $(NAME)
@@ -50,6 +51,7 @@ $(OBJ_DIR):
 	@mkdir -p $@ 
 	@mkdir -p $@/parser
 	@mkdir -p $@/engine
+	@mkdir -p $@/inputs
 
 lib:
 	@make -C $(LIBFT_DIR)

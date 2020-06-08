@@ -1,5 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/06/08 12:31:24 by baudiber          #+#    #+#             */
+/*   Updated: 2020/06/08 14:10:16 by baudiber         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/scop.h"
-#include <stdio.h>
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	(void)window;
+	glViewport(0, 0, width, height);
+}
 
 bool init(void)
 {
@@ -7,39 +24,27 @@ bool init(void)
 
     e = get_env();
 
-    if ((SDL_Init(SDL_INIT_VIDEO)) != 0)
-    {
-        SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
-        return (false);
-    }
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    if ((SDL_GL_LoadLibrary(NULL)) != 0)
-    {
-        SDL_Log("Unable to initialize OPENGL: %s", SDL_GetError());
-        return (false);
-    }
-    // Request an OpenGL 4.5 context (should be core)
-    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
-    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-    // Also request a depth buffer
-    //SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 0);
-    //SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
-
-     if (!(e->win = SDL_CreateWindow("scop", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIN_W, WIN_H, SDL_WINDOW_OPENGL)))
-        return (false);
-
-    printf("Version:  %s\n", glGetString(GL_VERSION));
-    SDL_GLContext test;
-    //if(!(e->context = SDL_GL_CreateContext(e->win)))
-    if(!(test = SDL_GL_CreateContext(e->win)))
-    {
-        SDL_Log("Unable to initialize OPENGL: %s", SDL_GetError());
-        return (false);
-    }
-
-    gladLoadGLLoader(SDL_GL_GetProcAddress);
-    glViewport(0, 0, WIN_W, WIN_H);
+	e->window = glfwCreateWindow( WIN_W, WIN_H, "scop", NULL, NULL);
+	if (!e->window) 
+	{
+		ft_putendl("Failed to create GLFW window");
+		glfwTerminate();
+		return (false);
+	}
+	glfwMakeContextCurrent(e->window);
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		ft_putendl("Failed to init GLAD");
+		return (false);
+	}
+	glViewport(0, 0, WIN_W, WIN_H);
+	glfwSetFramebufferSizeCallback(e->window, framebuffer_size_callback);
 
 
     return (true);

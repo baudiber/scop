@@ -1,0 +1,19 @@
+[
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-Wall",
+            "-Werror",
+            "-Wextra",
+            "-I",
+            "./includes",
+            "-I/Users/baudiber/.brew/Cellar/glfw/3.3.2/include",
+            "-o",
+            "objs/engine/run.o",
+            "srcs/engine/run.c"
+        ],
+        "directory": "/Users/baudiber/scop",
+        "file": "srcs/engine/run.c"
+    }
+]
