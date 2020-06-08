@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/08 16:37:57 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/08 17:03:19 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,17 @@ const char *vertexShaderSource = "#version 410 core\n"
     "}\0";
 
 const char *fragmentShaderSource = "#version 410 core\n"
-	"out vec4 FragColor\n"
-	"void main()\n"
-	"{\n"
-	" 	FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-	"}\0";
+    "out vec4 FragColor;\n"
+    "void main()\n"
+    "{\n"
+    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+    "}\n\0";
+//const char *fragmentShaderSource = "#version 410 core\n"
+//	"out vec4 FragColor\n"
+//    "void main()\n"
+//	"{\n"
+//	" 	FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+//	"}\0";
 
 void run(void)
 {
@@ -32,14 +38,7 @@ void run(void)
 
 	e = get_env();
 
-	float vertices[] = {
-		-0.5f, -0.5f, 0.0f,
-    	 0.5f, -0.5f, 0.0f,
-    	 0.0f,  0.5f, 0.0f
-	};
-
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW); //use this later
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	
 
 	unsigned int vertex_shader;
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -87,12 +86,34 @@ void run(void)
 		ft_putendl(info_log);
 	}
 
-	glUseProgram(shader_program);
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
 
+
+
+	unsigned int VBO;
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	unsigned int VAO;
+	glGenVertexArrays(1, &VAO);
+
+	float vertices[] = {
+		-0.5f, -0.5f, 0.0f,
+    	 0.5f, -0.5f, 0.0f,
+    	 0.0f,  0.5f, 0.0f
+	};
+
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW); //use this later
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+
+
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 	
 	while (!glfwWindowShouldClose(e->window)) 
 	{
@@ -100,6 +121,10 @@ void run(void)
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		glUseProgram(shader_program);
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		glfwSwapBuffers(e->window);
 		glfwPollEvents();
