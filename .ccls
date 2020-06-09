@@ -1,5 +1,0 @@
-clang
-%c -std=c11
-%h --include=Global.h
--I`pkg-config --cflags glfw3`
--D`pkg-config --static --libs glfw3`
