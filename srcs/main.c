@@ -6,21 +6,15 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 14:09:41 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/08 14:09:42 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/09 21:00:52 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/scop.h"
 
-t_env   *get_env(void) {
-    static t_env    e;
-
-    return (&e);
-}
-
 int     main(int ac, char **av)
 {
-    t_env   *e;
+    t_env   e;
 
     if (ac != 2 || ft_strequ("", av[1]))
     {
@@ -28,7 +22,6 @@ int     main(int ac, char **av)
 		return (0);
     }
 
-    e = get_env();
     ft_putstr("Opening ");
     ft_putendl(av[1]);
     if (!parse_file(av[1]))
@@ -36,13 +29,13 @@ int     main(int ac, char **av)
         ft_putendl("ERROR parsing file");
 		return (0);
     }
-    if (!init())
+    if (!init(&e))
     {
         ft_putendl("ERROR during init");
         return (-1);
     }
 
-    run();
+    run(&e);
 
 	glfwTerminate();
     return (0);
