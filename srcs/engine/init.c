@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:24 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/09 21:00:18 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/06/10 15:25:14 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ bool init(t_env *e)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #ifdef __APPLE__
+	ft_putendl("Mac setting applied.");
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
@@ -36,14 +37,11 @@ bool init(t_env *e)
 		return (false);
 	}
 	glfwMakeContextCurrent(e->window);
+	glfwSetFramebufferSizeCallback(e->window, framebuffer_size_callback);
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		ft_putendl("Failed to init GLAD");
 		return (false);
 	}
-	glViewport(0, 0, WIN_W, WIN_H);
-	glfwSetFramebufferSizeCallback(e->window, framebuffer_size_callback);
-
-
     return (true);
 }
