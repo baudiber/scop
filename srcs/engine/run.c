@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/10 16:49:38 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/11 16:49:15 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,20 @@
 
 const char *vertexShaderSource = "#version 410 core\n"
     "layout (location = 0) in vec3 aPos;\n"
+    "layout (location = 1) in vec3 aColor;\n"
+	"out vec3 ourColor;\n"
     "void main()\n"
     "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "   gl_Position = vec4(aPos, 1.0);\n"
+	" 	ourColor = aColor;\n"
     "}\0";
 
 const char *fragmentShaderSource = "#version 410 core\n"
     "out vec4 FragColor;\n"
+	"in vec3 ourColor;\n"
     "void main()\n"
     "{\n"
-    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+    "   FragColor = vec4(ourColor, 1.0);\n"
     "}\n\0";
 
 
@@ -101,15 +105,21 @@ unsigned int compile_shaders() {
 
 void run(t_env *e)
 {
+//	float vertices[] = {
+//		0.5f,  0.5f, 0.0f,  // top right
+//		0.5f, -0.5f, 0.0f,  // bottom right
+//		-0.5f, -0.5f, 0.0f,  // bottom left
+//		-0.5f,  0.5f, 0.0f   // top left 
+//	};
+//	unsigned int indices[] = {  // note that we start from 0!
+//		0, 1, 3,   // first triangle
+//		1, 2, 3    // second triangle
+//	};
 	float vertices[] = {
-		0.5f,  0.5f, 0.0f,  // top right
-		0.5f, -0.5f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f,  // bottom left
-		-0.5f,  0.5f, 0.0f   // top left 
-	};
-	unsigned int indices[] = {  // note that we start from 0!
-		0, 1, 3,   // first triangle
-		1, 2, 3    // second triangle
+		// positions         // colors
+		0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom right
+		-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom left
+		0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f    // top
 	};
 	//the Vertex Buffer Object stores vertices in the gpu's memory
 	//VERTEX BUFFER's type is GL_ARRAY_BUFFER
@@ -117,14 +127,14 @@ void run(t_env *e)
 	//Vertex Array Object stores vertex attributes and which VBO to use
 	unsigned int VAO;
 	//Element Buffer Object stores the indices of which vertex to draw when
-	unsigned int EBO;
+//	unsigned int EBO;
 	unsigned int shader_program;
 
 	shader_program = compile_shaders();
 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
+//	glGenBuffers(1, &EBO);
 	//bind VAO so it can store all the VBO and attrib settings
 	glBindVertexArray(VAO);
 
@@ -133,14 +143,17 @@ void run(t_env *e)
 	// v copies vertex data to the buffer
 	// glBufferData fn copies data to the currently bound buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+//	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	//here we tell GL how to interpret the vertex data
 	//first arg n(0) is location n(0) in vertex shader
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	//this v enables this ^
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*) (3 * sizeof(float)));
+	//this v enables this ^
+	glEnableVertexAttribArray(1);
 	// 0 is the VBO id (since it's the first we enable?)
 
 	//unbind VBO
@@ -157,11 +170,15 @@ void run(t_env *e)
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(shader_program);
+		float time_value= glfwGetTime();
+		float green_value = sinf(time_value) / 2.0f + 0.5f;
+		int vertex_color_location = glGetUniformLocation(shader_program, "ourColor");
+		glUniform4f(vertex_color_location, 0.0f, green_value, 0.0f, 1.0f);
 		//binding VAO to draw object
 		glBindVertexArray(VAO);
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
+//		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		glfwSwapBuffers(e->window);
 		glfwPollEvents();
@@ -169,6 +186,6 @@ void run(t_env *e)
 
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
+//	glDeleteBuffers(1, &EBO);
 	glDeleteProgram(shader_program);
 }

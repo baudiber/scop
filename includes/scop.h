@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/09 20:59:21 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/06/11 16:24:48 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "GLFW/glfw3.h"
 # include <stdbool.h>
 # include <fcntl.h>
+# include <math.h>
 
 # define WIN_W 1024
 # define WIN_H 768

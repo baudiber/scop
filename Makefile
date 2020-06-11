@@ -6,7 +6,7 @@
 #    By: baudiber <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/13 12:30:36 by baudiber          #+#    #+#              #
-#    Updated: 2020/06/10 16:52:20 by baudiber         ###   ########.fr        #
+#    Updated: 2020/06/11 15:32:04 by baudiber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ LIBFT_DIR	=	./libft
 SRC			=	main.c							\
 				glad.c							\
 				engine/init.c					\
-				engine/run_exo.c					\
+				engine/run.c					\
 				inputs/process_inputs.c \
 				parser/read_file.c
 

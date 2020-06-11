@@ -2,3 +2,4 @@ objs
 scop
 .DS_STORE
 .vscode
+compile_commands.json
