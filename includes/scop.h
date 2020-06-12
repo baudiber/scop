@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/11 16:24:48 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/12 14:42:41 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,18 @@
 # define WIN_H 768
 
 typedef struct s_env    t_env;
+typedef struct s_size    t_size;
 
 struct s_env
 {
 	GLFWwindow* window;
 	
+};
+
+struct s_size
+{
+	int v_nb;
+	int f_nb;
 };
 
 bool    parse_file(char *file_name);
