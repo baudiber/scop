@@ -6,7 +6,7 @@
 #    By: baudiber <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/13 12:30:36 by baudiber          #+#    #+#              #
-#    Updated: 2020/06/11 15:32:04 by baudiber         ###   ########.fr        #
+#    Updated: 2020/06/15 17:02:26 by baudiber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ SRC_DIR		=	./srcs
 INC_DIR		=	./includes
 OBJ_DIR		=	./objs
 LIBFT_DIR	=	./libft
+LIBGRAPH_DIR =  ./libgraph
 
 SRC			=	main.c							\
 				glad.c							\
@@ -34,7 +35,7 @@ CC 			=	clang
 FLAGS		=	-Wall -Werror -Wextra
 INCLUDES	=	-I $(INC_DIR) `pkg-config --cflags glfw3`
 HEADER_H	=	$(INC_DIR)/$(NAME).h
-LIBS		=	-L $(LIBFT_DIR) -lft `pkg-config --static --libs glfw3` -framework OpenGL -framework Appkit
+LIBS		=	-L $(LIBFT_DIR) -lft -L $(LIBGRAPH_DIR) -lgraph `pkg-config --static --libs glfw3` -framework OpenGL -framework Appkit
 OBJ 		=	$(addprefix $(OBJ_DIR)/,$(SRC:.c=.o))
 
 all: art $(NAME)
@@ -55,6 +56,7 @@ $(OBJ_DIR):
 
 lib:
 	@make -C $(LIBFT_DIR)
+	@make -C $(LIBGRAPH_DIR)
 
 art:
 	@echo " ███████╗ ██████╗ ██████╗ ██████╗"
@@ -68,9 +70,11 @@ clean:
 	@rm -f $(OBJ)
 	@rm -rf $(OBJ_DIR)
 	@make -C $(LIBFT_DIR) clean
+	@make -C $(LIBGRAPH_DIR) clean
 
 fclean: clean
 	@make -C $(LIBFT_DIR) fclean
+	@make -C $(LIBGRAPH_DIR) fclean
 	@rm -f $(NAME)
 
 re: fclean all

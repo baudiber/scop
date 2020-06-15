@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/12 17:00:12 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/15 17:21:47 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,25 @@
 
 const char *vertexShaderSource = "#version 410 core\n"
     "layout (location = 0) in vec3 aPos;\n"
+    "layout (location = 1) in vec3 aColor;\n"
+    "layout (location = 2) in vec2 aTexCoord;\n"
+	"out vec3 ourColor;\n"
+	"out vec2 TexCoord;\n"
     "void main()\n"
     "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "   gl_Position = vec4(aPos, 1.0);\n"
+	" 	ourColor = aColor;\n"
+	" 	TexCoord = aTexCoord;\n"
     "}\0";
 
 const char *fragmentShaderSource = "#version 410 core\n"
     "out vec4 FragColor;\n"
+	"in vec3 ourColor;\n"
+	"in vec2 TexCoord;\n"
+	"uniform sampler2D ourTexture;\n"
     "void main()\n"
     "{\n"
-    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+    "   FragColor = texture(ourTexture, TexCoord);\n"
     "}\n\0";
 
 void run(t_env *e)
@@ -74,27 +83,53 @@ void run(t_env *e)
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
 
+//	float vertices[] = {
+//		0.5f,  0.5f, 0.0f,  // top right
+//		0.5f, -0.5f, 0.0f,  // bottom right
+//		-0.5f, -0.5f, 0.0f,  // bottom left
+//		-0.5f,  0.5f, 0.0f   // top left 
+//	};
+
 	float vertices[] = {
-		0.5f,  0.5f, 0.0f,  // top right
-		0.5f, -0.5f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f,  // bottom left
-		-0.5f,  0.5f, 0.0f   // top left 
-	};
+    // positions          // colors           // texture coords
+     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
+};
 	unsigned int indices[] = {  // note that we start from 0!
 		0, 1, 3,   // first triangle
 		1, 2, 3    // second triangle
 	};
 
-	float text_chords[] = {
-		0.0f, 0.0f,  // lower-left corner  
-    	1.0f, 0.0f,  // lower-right corner
-    	0.5f, 1.0f   // top-center corner
-	};
+//	float text_chords[] = {
+//		0.0f, 0.0f,  // lower-left corner  
+//    	1.0f, 0.0f,  // lower-right corner
+//    	0.5f, 1.0f   // top-center corner
+//	};
+
+
+
+	unsigned int texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	const unsigned char *data = parse_bmp("/Users/baudiber/scop/textures/wall.bmp");
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else 
+	{
+		ft_putendl("error loading texture");
+		exit(0);
+	}
+	free((unsigned char*)data);
 
 	unsigned int VBO;
 	unsigned int VAO;
@@ -110,8 +145,14 @@ void run(t_env *e)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -124,6 +165,8 @@ void run(t_env *e)
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		glBindTexture(GL_TEXTURE_2D, texture);
 
 		glUseProgram(shader_program);
 		glBindVertexArray(VAO);

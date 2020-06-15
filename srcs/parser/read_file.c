@@ -92,13 +92,13 @@ static void check_data(int fd, t_size *data)
 bool    parse_file(char *file_name)
 {
     int     fd;
-	//t_size 	data;
+	t_size 	data;
 
     if ((fd = open(file_name, O_DIRECTORY)) >= 0)
         return (false);
     if ((fd = open(file_name, O_RDONLY)) < 0)
         return (false);
-    //check_data(fd, &data);
+    check_data(fd, &data);
 	
 	if ((fd = close(fd)) < 0) 
 		return (false);
