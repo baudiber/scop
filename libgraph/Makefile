@@ -6,14 +6,13 @@
 #    By: baudiber <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/06/15 14:12:11 by baudiber          #+#    #+#              #
-#    Updated: 2020/06/15 15:04:59 by baudiber         ###   ########.fr        #
+#    Updated: 2020/06/16 14:14:11 by baudiber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libgraph.a
 CC = gcc
-SRC = srcs/parse_png.c \
-	  srcs/parse_bmp.c
+SRC = srcs/parse_bmp.c
 
 OBJ = $(SRC:.c=.o)
 FLAGS = -Wall -Werror -Wextra

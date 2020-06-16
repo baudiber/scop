@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/15 16:46:19 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/16 16:50:25 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,11 @@ struct s_size
 {
 	int v_nb;
 	int f_nb;
+};
+
+struct s_mesh
+{
+	
 };
 
 bool    parse_file(char *file_name);

@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 14:55:08 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/15 16:19:46 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/16 14:17:29 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,22 @@
 # define BMP_H
 
 # include <stdint.h>
+# include <stdlib.h>
+# include <fcntl.h>
 # include <sys/types.h>
 # include <sys/uio.h>
 # include <unistd.h>
+# include <stdbool.h>
 
-typedef struct __attribute__((__packed__)) s_file_header	t_file_header;
-typedef struct __attribute__((__packed__)) s_image_header	t_image_header;
+typedef struct __attribute__((__packed__)) s_headers	t_headers;
 typedef struct __attribute__((__packed__)) s_image_data	t_image_data;
 
-struct	s_file_header {
-	unsigned char	b;
-	unsigned char	m;
+struct	s_headers {
+	uint16_t		bm;
 	unsigned int	f_size;
 	uint16_t		unused1;
 	uint16_t		unused2;
 	unsigned int	image_data_offset;
-};
-
-struct	s_image_header {
 	unsigned int	image_header_size;
 	unsigned int	width;
 	unsigned int	height;

@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/15 17:21:47 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/16 15:43:30 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ const char *fragmentShaderSource = "#version 410 core\n"
 	"uniform sampler2D ourTexture;\n"
     "void main()\n"
     "{\n"
-    "   FragColor = texture(ourTexture, TexCoord);\n"
+    "   FragColor = texture(ourTexture, TexCoord) * vec4(ourColor, 1.0);\n"
     "}\n\0";
 
 void run(t_env *e)
@@ -118,7 +118,8 @@ void run(t_env *e)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	const unsigned char *data = parse_bmp("/Users/baudiber/scop/textures/wall.bmp");
+	int width, height;
+	unsigned char *data = parse_bmp_32bit("/Users/baudiber/scop/textures/wall.bmp", &width, &height);
 	if (data)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -129,7 +130,7 @@ void run(t_env *e)
 		ft_putendl("error loading texture");
 		exit(0);
 	}
-	free((unsigned char*)data);
+	free(data);
 
 	unsigned int VBO;
 	unsigned int VAO;

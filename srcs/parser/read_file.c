@@ -22,14 +22,18 @@ static void check_data(int fd, t_size *data)
     vecs = 0;
     while ((rd = get_next_line(fd, &line)) > 0)
     {
-        if (line && line[0] == 'f')
+        if (line && line[0] == 'v')
 		{
 			v_data = ft_strsplit(line, ' ');
-            faces += ft_tablen(v_data) - 1;
+            vecs += ft_tablen(v_data) - 1;
+			ft_freetab(v_data);
 		}
-        if (line && line[0] == 'v')
+        else if (line && line[0] == 'f')
+		{
 			f_data = ft_strsplit(line, ' ');
-            vecs++;
+            faces += ft_tablen(f_data) - 1;
+			ft_freetab(f_data);
+		}
         (line) ? ft_strdel(&line) : 0;
     }
     (line) ? ft_strdel(&line) : 0;
@@ -65,29 +69,39 @@ static void check_data(int fd, t_size *data)
 //		exit(0);
 //	}
 //}
+//
 
-//static void get_data(int fd, t_size *data)
-//{
-//    char    *line;
-//    int     rd;
-//	char 	**v_data;
-//	char 	**f_data;
-////	float 	*vertices;
-////	unsigned int *indices;
-//
-//    while ((rd = get_next_line(fd, &line)) > 0)
-//    {
-//        if (line && line[0] == 'v')
-//			v_data = ft_strsplit(line, ' ');
-//        if (line && line[0] == 'f')
-//			 f_data = ft_strsplit(line, ' ');
-//        (line) ? ft_strdel(&line) : 0;
-//    }
-//    (line) ? ft_strdel(&line) : 0;
-//
-////	vertices = parse_v_data(v_data, data->v_nb);
-////	indices = parse_f_data(f_data, data->f_nb);
-//}
+static void get_data(int fd, t_size *data)
+{
+    char    *line;
+    int     rd;
+	char 	**v_data;
+	char 	**f_data;
+//	float 	*vertices;
+//	unsigned int *indices;
+
+    while ((rd = get_next_line(fd, &line)) > 0)
+    {
+        if (line && line[0] == 'v')
+		{
+			v_data = ft_strsplit(line, ' ');
+		}
+        if (line && line[0] == 'f')
+		{
+			 f_data = ft_strsplit(line, ' ');
+		}
+        (line) ? ft_strdel(&line) : 0;
+    }
+    (line) ? ft_strdel(&line) : 0;
+
+//	vertices = parse_v_data(v_data, data->v_nb);
+//	indices = parse_f_data(f_data, data->f_nb);
+}
+
+void 	malloc_data(t_size *data)
+{
+
+}
 
 bool    parse_file(char *file_name)
 {
@@ -99,12 +113,13 @@ bool    parse_file(char *file_name)
     if ((fd = open(file_name, O_RDONLY)) < 0)
         return (false);
     check_data(fd, &data);
+	malloc_data(&data);
 	
 	if ((fd = close(fd)) < 0) 
 		return (false);
-    //if ((fd = open(file_name, O_RDONLY)) < 0)
-     //   return (false);
-	//get_data(fd, &data);
+    if ((fd = open(file_name, O_RDONLY)) < 0)
+       return (false);
+	get_data(fd, &data);
 
     return (true);
 }

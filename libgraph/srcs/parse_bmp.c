@@ -6,39 +6,36 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 14:54:07 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/15 17:12:11 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/16 14:24:21 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../includes/libgraph.h"
-# include "../includes/bmp.h"
-# include <stdio.h>
+#include "../includes/libgraph.h"
+#include "../includes/bmp.h"
 
-const unsigned char *parse_bmp(char *file_path) 
+bool			parse_headers(int fd, int *w, int *h)
 {
-	int 	fd;
-	t_file_header fh;
-	t_image_header ih;
-	int 	total_pixels;
-	int 	i;
-	t_image_data id;
-	unsigned char 	*data;
+	ssize_t		ret;
+	t_headers	headers;
 
-	if ((fd = open(file_path, O_DIRECTORY)) >= 0) 
-		return NULL;
-	if ((fd = open(file_path, O_RDONLY)) < 0)
-		return NULL;
-	ssize_t ret = read(fd, &fh, sizeof(fh));
-	//printf("%lu %d %c %c %d\n",ret, fh.f_size, fh.b, fh.m, fh.image_data_offset);
-	ret = read(fd, &ih, sizeof(ih));
-	//printf("%lu %d %d %d\n",ret, ih.width, ih.height, ih.bits_per_pixel);
-	total_pixels = ih.width * ih.height;
-	if (!(data = (unsigned char*)malloc(sizeof(unsigned char) * (total_pixels * 3) + 1)) || ih.bits_per_pixel != 32)
-	{
-		printf("bbp: %d", ih.bits_per_pixel);
+	ret = read(fd, &headers, sizeof(t_headers));
+	if (headers.bits_per_pixel != 32)
+		return (false);
+	*w = headers.width;
+	*h = headers.height;
+	return (true);
+}
+
+unsigned char	*parse_pixels(int total_pixels, int fd)
+{
+	t_image_data	id;
+	unsigned char	*data;
+	int				i;
+	ssize_t			ret;
+
+	if (!(data = (unsigned char*)malloc(sizeof(unsigned char) \
+			* (total_pixels * 3) + 1)))
 		return (NULL);
-	}
-
 	i = 0;
 	while (i < total_pixels)
 	{
@@ -46,13 +43,30 @@ const unsigned char *parse_bmp(char *file_path)
 		data[i * 3] = id.r;
 		data[(i * 3) + 1] = id.g;
 		data[(i * 3) + 2] = id.b;
-		//printf("%d %d %d\n", id.r, id.g, id.b);
 		i++;
 	}
 	data[i] = '\0';
+	return (data);
+}
 
-	if ((fd = close(fd)) < 0)
-		return NULL;
+/*
+** 32 Bit BMP parsing
+** Args:
+** - file_path : path to the bmp file
+** - w : will be filled with the img's width in pixels
+** - h : will be filled with the img's height in pixels
+** Return: img data in bytes as RGB
+*/
 
-	return data;
+unsigned char	*parse_bmp_32bit(char *file_path, int *w, int *h)
+{
+	int			fd;
+
+	if ((fd = open(file_path, O_DIRECTORY)) >= 0)
+		return (NULL);
+	if ((fd = open(file_path, O_RDONLY)) < 0)
+		return (NULL);
+	if (!parse_headers(fd, w, h))
+		return (NULL);
+	return (parse_pixels(*w * *h, fd));
 }
