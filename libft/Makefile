@@ -6,7 +6,7 @@
 #    By: baudiber <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/08 16:47:49 by baudiber          #+#    #+#              #
-#    Updated: 2018/09/15 14:50:18 by baudiber         ###   ########.fr        #
+#    Updated: 2020/06/18 14:18:53 by baudiber         ###   ########.fr        #
 #    Updated: 2018/04/28 17:50:49 by baudiber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
@@ -96,7 +96,12 @@ SRC = ft_memset.c \
 	  ft_atoi_base.c \
 	  ft_itoa_base.c \
 	  ft_utoa_base.c \
-	  ft_swap.c
+	  ft_swap.c \
+	  ft_atod.c \
+	  ft_atol.c \
+	  ft_longlen.c \
+	  ft_pow.c
+	
 
 OBJ = $(SRC:.c=.o)
 FLAGS = -Wall -Werror -Wextra

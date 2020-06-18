@@ -1,23 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libgraph.h                                         :+:      :+:    :+:   */
+/*   matrix.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/06/15 14:08:25 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/18 17:07:26 by baudiber         ###   ########.fr       */
+/*   Created: 2020/06/18 16:36:37 by baudiber          #+#    #+#             */
+/*   Updated: 2020/06/18 16:37:36 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBGRAPH_H
-# define LIBGRAPH_H
+#ifndef MATRIX_H
 
-# include "vecs.h"
-# include "matrix.h"
+# define MATRIX_H
 
-unsigned char	*parse_bmp_32bit(char *file_path, int *w, int *h, int alpha);
-t_mat4x4 		mult_4x4mat(t_mat4x4 m1, t_mat4x4 m2);
-t_vec4 			transform_vec4(t_vec4 v, t_mat4x4 mat);
+typedef struct s_mat4x4 t_mat4x4;
+
+struct				s_mat4x4
+{
+	float			m[4][4];
+};
 
 #endif

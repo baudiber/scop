@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 14:55:08 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/16 14:17:29 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/17 14:15:03 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ struct	s_headers {
 	uint16_t		unused2;
 	unsigned int	image_data_offset;
 	unsigned int	image_header_size;
-	unsigned int	width;
-	unsigned int	height;
+	int				width;
+	int				height;
 	uint16_t		planes;
 	uint16_t		bits_per_pixel;
 	unsigned int	compression;
@@ -47,7 +47,7 @@ struct	s_image_data {
 	unsigned char	b;
 	unsigned char	g;
 	unsigned char	r;
-	unsigned char	z;
+	unsigned char	a;
 };
 
 #endif

@@ -6,7 +6,7 @@
 #    By: baudiber <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/13 12:30:36 by baudiber          #+#    #+#              #
-#    Updated: 2020/06/16 15:46:11 by baudiber         ###   ########.fr        #
+#    Updated: 2020/06/18 16:18:06 by baudiber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ LIBGRAPH_DIR =  ./libgraph
 SRC			=	main.c							\
 				glad.c							\
 				engine/init.c					\
-				engine/run.c					\
+				engine/run_texture.c					\
 				inputs/process_inputs.c \
 				parser/read_file.c
 

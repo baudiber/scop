@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/08 16:44:49 by baudiber          #+#    #+#             */
-/*   Updated: 2018/09/15 14:50:35 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/18 14:43:11 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,5 +125,9 @@ unsigned int	ft_getcolor(char *str);
 void			ft_swap(int *a, int *b);
 char			*ft_itoa_base(int value, int base);
 char			*ft_utoa_base(unsigned int value, int base);
+double			ft_pow(double x, double y);
+double			ft_atod(const char *str);
+long			ft_atol(const char *str);
+size_t			ft_longlen(long nb);
 
 #endif

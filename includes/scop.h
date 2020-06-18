@@ -6,14 +6,13 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/16 16:50:25 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/18 15:56:35 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SCOP_H
 # define SCOP_H
 
-//# define STB_IMAGE_IMPLEMENTATION
 # define WIN_W 1024
 # define WIN_H 768
 
@@ -24,30 +23,37 @@
 # include <stdbool.h>
 # include <fcntl.h>
 # include <math.h>
-//# include "stb_image.h"
 
+#include <stdio.h>
 
 typedef struct s_env    t_env;
-typedef struct s_size    t_size;
-
-struct s_env
-{
-	GLFWwindow* window;
-	
-};
+typedef struct s_size   t_size;
+typedef struct s_mesh 	t_mesh;
 
 struct s_size
 {
-	int v_nb;
-	int f_nb;
+	unsigned int v_nb;
+	unsigned int f_nb;
+	unsigned int indices;
+	unsigned int points;
 };
 
 struct s_mesh
 {
-	
+	t_vec3	*vertices;
+	int		**faces;
+	float 	*verts;
+	unsigned int 	*indices;
 };
 
-bool    parse_file(char *file_name);
+struct s_env
+{
+	GLFWwindow* window;
+	t_mesh 		mesh;
+	t_size 		data_size;
+};
+
+bool    parse_file(char *file_name, t_env *e);
 bool    init(t_env *e);
 
 void    run(t_env *e);

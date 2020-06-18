@@ -1,23 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libgraph.h                                         :+:      :+:    :+:   */
+/*   ft_longlen.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/06/15 14:08:25 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/18 17:07:26 by baudiber         ###   ########.fr       */
+/*   Created: 2020/06/18 14:18:18 by baudiber          #+#    #+#             */
+/*   Updated: 2020/06/18 14:18:33 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBGRAPH_H
-# define LIBGRAPH_H
+#include "libft.h"
 
-# include "vecs.h"
-# include "matrix.h"
+size_t	ft_longlen(long nb)
+{
+	size_t	i;
 
-unsigned char	*parse_bmp_32bit(char *file_path, int *w, int *h, int alpha);
-t_mat4x4 		mult_4x4mat(t_mat4x4 m1, t_mat4x4 m2);
-t_vec4 			transform_vec4(t_vec4 v, t_mat4x4 mat);
-
-#endif
+	i = 0;
+	if (nb == 0)
+		i = 1;
+	if (nb < 0)
+	{
+		i++;
+		nb = -nb;
+	}
+	while (nb)
+	{
+		i++;
+		nb = nb / 10;
+	}
+	return (i);
+}
