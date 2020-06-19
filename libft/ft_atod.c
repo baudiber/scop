@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 16:44:01 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/18 14:53:00 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/19 13:47:39 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,8 @@ double 	ft_atod(const char *str)
 	if (frac_len <= 0)
 		return (integer_part);
 	div = ft_pow(10, frac_len);
-	return (integer_part + (fractional_part / div));
+	if (ft_strlen(split[0]) > 1 && split[0][0] == '-')
+		return (-1 * (integer_part + (fractional_part / div)));
+	else 
+		return (integer_part + (fractional_part / div));
 }

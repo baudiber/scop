@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/18 15:56:35 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/19 15:18:56 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,9 @@ bool    init(t_env *e);
 void    run(t_env *e);
 
 void 	process_inputs(GLFWwindow *window);
+
+t_mat4x4	scale_mat4x4(t_vec4 scale);
+t_mat4x4	identity_mat4x4(void);
+
 
 #endif

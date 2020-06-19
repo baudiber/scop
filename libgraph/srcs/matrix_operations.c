@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 16:39:12 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/18 17:06:53 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/19 15:57:11 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,13 @@ t_mat4x4	mult_4x4mat(t_mat4x4 m1, t_mat4x4 m2)
 	return (res);
 }
 
-t_vec4 	transform_vec4(t_vec4 v, t_mat4x4 mat)
+t_vec4 	translate_mat4x4(t_vec4 v, t_mat4x4 mat)
 {
 	t_vec4	res;
 
-	res.x = mat.m[0][0] * v.x + mat.m[0][1] * v.y + mat.m[0][2] * \
-			v.z + mat.m[0][3] * v.w;
-	res.y = mat.m[1][0] * v.x + mat.m[1][1] * v.y + mat.m[1][2] * \
-			v.z + mat.m[1][3] * v.w;
-	res.z = mat.m[2][0] * v.x + mat.m[2][1] * v.y + mat.m[2][2] * \
-			v.z + mat.m[2][3] * v.w;
-	res.w = mat.m[3][0] * v.x + mat.m[3][1] * v.y + mat.m[3][2] * \
-			v.z + mat.m[3][3] * v.w;
+	res.x = mat.m[0][0] * v.x;
+	res.y = mat.m[1][1] * v.y;
+	res.z = mat.m[2][2] * v.z;
+	res.w = 1.0;
 	return (res);
 }

@@ -1,23 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libgraph.h                                         :+:      :+:    :+:   */
+/*   matrix_ops.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/06/15 14:08:25 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/19 15:54:19 by baudiber         ###   ########.fr       */
+/*   Created: 2020/06/19 15:16:10 by baudiber          #+#    #+#             */
+/*   Updated: 2020/06/19 16:50:48 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBGRAPH_H
-# define LIBGRAPH_H
+#include "../../includes/scop.h"
 
-# include "vecs.h"
-# include "matrix.h"
+t_mat4x4	identity_mat4x4(void)
+{
+	t_mat4x4	mat;
 
-unsigned char	*parse_bmp_32bit(char *file_path, int *w, int *h, int alpha);
-t_mat4x4 		mult_4x4mat(t_mat4x4 m1, t_mat4x4 m2);
-t_vec4 			translate_mat4x4(t_vec4 v, t_mat4x4 mat);
+	ft_bzero(&mat, sizeof(t_mat4x4));
+	mat.m[0][0] = 1.0;
+	mat.m[1][1] = 1.0;
+	mat.m[2][2] = 1.0;
+	mat.m[3][3] = 1.0;
+	return (mat);
+}
 
-#endif
+t_mat4x4	scale_mat4x4(t_vec4 scale)
+{
+	t_mat4x4	mat;
+
+	mat = identity_mat4x4();
+	mat.m[0][0] = scale.x;
+	mat.m[1][1] = scale.y;
+	mat.m[2][2] = scale.z;
+	mat.m[3][3] = 1.0;
+	return (mat);
+}

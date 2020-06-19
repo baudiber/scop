@@ -68,9 +68,9 @@ static void parse_v_data(char ***data_ptr, t_vec3 *verts)
 		exit (0);
 	}
 
-	verts->x = ft_atod(data[1]) / 4;
-	verts->y = ft_atod(data[2]) / 4;
-	verts->z = ft_atod(data[3]) / 4 - 0.5;
+	verts->x = ft_atod(data[1]);
+	verts->y = ft_atod(data[2]);
+	verts->z = ft_atod(data[3]);
 	//printf("%f %f %f\n", verts->x, verts->y, verts->z);
 }
 
@@ -85,9 +85,9 @@ static void fill_points(char ***data_ptr, float **verts, int *index)
 		ft_putendl("error parsing OBJ's vecs");
 		exit (0);
 	}
-	(*verts)[*index] = ft_atod(data[1]) / 4;
-	(*verts)[(*index) + 1] = ft_atod(data[2]) / 4;
-	(*verts)[(*index) + 2] = ft_atod(data[3]) / 4 + 0.5;
+	(*verts)[*index] = ft_atod(data[1]);
+	(*verts)[(*index) + 1] = ft_atod(data[2]);
+	(*verts)[(*index) + 2] = ft_atod(data[3]);
 	(*index) += 3;
 }
 
@@ -108,7 +108,7 @@ static void parse_f_data(char ***data_ptr, int **face)
 	i = 0;
 	while (i < tablen - 1)
 	{
-		(*face)[i] = ft_atoi(data[i + 1]);
+		(*face)[i] = ft_atoi(data[i + 1]) ;
 		i++;
 	}
 }
@@ -128,7 +128,7 @@ static void fill_indices(char ***data_ptr, unsigned int **indices, int *index)
 	i = 1;
 	while (i < tablen)
 	{
-		(*indices)[(*index)] = ft_atoi(data[i]);
+		(*indices)[(*index)] = ft_atoi(data[i]) - 1;
 		++(*index);
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/16 17:00:54 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/16 17:03:05 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/19 13:53:42 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ typedef struct s_vec2 t_vec2;
 typedef struct s_vec2_double t_vec2_double;
 typedef struct s_vec2_int t_vec2_int;
 typedef struct s_vec2_uint t_vec2_uint;
-typedef struct s_vec3 t_vec3;
+typedef struct __attribute__((__packed__))s_vec3 t_vec3;
 typedef struct s_vec3_double t_vec3_double;
 typedef struct s_vec3_int t_vec3_int;
 typedef struct s_vec3_uint t_vec3_uint;
