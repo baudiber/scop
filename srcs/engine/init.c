@@ -6,11 +6,12 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:24 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/10 15:25:14 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/20 08:32:50 by wm               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/scop.h"
+#include <stdio.h>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -18,16 +19,24 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
+void error_callback(int error, const char* description)
+{
+	(void)error;
+    ft_putstr("Error: ");
+    ft_putendl(description);
+}
+
 bool init(t_env *e)
 {
 	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #ifdef __APPLE__
 	ft_putendl("Mac setting applied.");
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
+	glfwSetErrorCallback(error_callback);
 
 	e->window = glfwCreateWindow( WIN_W, WIN_H, "scop", NULL, NULL);
 	if (!e->window) 

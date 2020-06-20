@@ -6,7 +6,7 @@
 #    By: baudiber <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/13 12:30:36 by baudiber          #+#    #+#              #
-#    Updated: 2020/06/19 13:39:16 by baudiber         ###   ########.fr        #
+#    Updated: 2020/06/19 20:23:16 by wm               ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,8 +22,9 @@ SRC			=	main.c							\
 				glad.c							\
 				engine/init.c					\
 				engine/run.c					\
-				inputs/process_inputs.c \
-				parser/read_file.c
+				inputs/process_inputs.c 		\
+				parser/read_file.c 				\
+				engine/matrix_ops.c
 
 R			=	\033[31m
 G			=	\033[32m
@@ -35,8 +36,13 @@ CC 			=	clang
 FLAGS		=	-Wall -Werror -Wextra
 INCLUDES	=	-I $(INC_DIR) `pkg-config --cflags glfw3`
 HEADER_H	=	$(INC_DIR)/$(NAME).h
-LIBS		=	-L $(LIBFT_DIR) -lft -L $(LIBGRAPH_DIR) -lgraph `pkg-config --static --libs glfw3` -framework OpenGL -framework Appkit
+
 OBJ 		=	$(addprefix $(OBJ_DIR)/,$(SRC:.c=.o))
+ifeq ($(shell uname -s), Darwin)
+	LIBS		=	-L $(LIBFT_DIR) -lft -L $(LIBGRAPH_DIR) -lgraph `pkg-config --static --libs glfw3` -framework OpenGL -framework Appkit -shared
+else ifeq ($(shell uname -s), Linux) 
+	LIBS		=	-L $(LIBFT_DIR) -lft -L $(LIBGRAPH_DIR) -lgraph `pkg-config --static --libs glfw3` -lGL -lX11 -lpthread -lXrandr -lXi -ldl
+endif
 
 all: art $(NAME)
 
