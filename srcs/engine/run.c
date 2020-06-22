@@ -6,28 +6,56 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/19 19:38:35 by wm               ###   ########.fr       */
+/*   Updated: 2020/06/22 20:02:02 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/scop.h"
 
+//const char *vertexShaderSource = "#version 330 core\n"
+//    "layout (location = 0) in vec3 aPos;\n"
+//    "out vec4 myColor;\n"
+//    "void main()\n"
+//    "{\n"
+//    "   gl_Position = vec4(aPos, 1.0);\n"
+//	" 	myColor = vec4(1.0 * aPos.z, 1.0 * aPos.z, 1.0 * aPos.z, 1.0);\n"
+//    "}\0";
+//
+//const char *fragmentShaderSource = "#version 330 core\n"
+// 	"in vec4 myColor;\n"
+//    "out vec4 FragColor;\n"
+//    "void main()\n"
+//    "{\n"
+//    "   FragColor = myColor;\n"
+//    "}\n\0";
+//
 const char *vertexShaderSource = "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
-    "out vec4 myColor;\n"
+    "layout (location = 1) in vec3 aColor;\n"
+    "layout (location = 2) in vec2 aTexCoord;\n"
+    "out vec3 ourColor;\n"
+    "out vec2 TexCoord;\n"
+	"uniform mat4 model;\n"
+	"uniform mat4 view;\n"
+	"uniform mat4 projection;\n"
     "void main()\n"
     "{\n"
-    "   gl_Position = vec4(aPos, 1.0);\n"
-	" 	myColor = vec4(1.0 * aPos.z, 1.0 * aPos.z, 1.0 * aPos.z, 1.0);\n"
+    "   gl_Position = projection * view * model * vec4(aPos, 1.0)\n"
+	" 	ourColor = aColor;\n"
+	" 	TexCoord = aTexCoord;\n"
     "}\0";
 
 const char *fragmentShaderSource = "#version 330 core\n"
- 	"in vec4 myColor;\n"
+ 	"in vec3 ourColor;\n"
+ 	"in vec2 TexCoord;\n"
+	"uniform sampler2D ourTexture;\n"
+
     "out vec4 FragColor;\n"
     "void main()\n"
     "{\n"
-    "   FragColor = myColor;\n"
+    "   FragColor = texture(ourTexture, TexCoord);\n"
     "}\n\0";
+
 
 unsigned int compile_vertex_shader() {
 	unsigned int vertex_shader;
@@ -124,6 +152,39 @@ t_vec3 vec3(float x, float y, float z)
 
 void run(t_env *e)
 {
+
+
+	float vertices[] = {
+    // positions          // colors           // texture coords
+     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
+	};
+	unsigned int indices[] = {  
+        0, 1, 3, // first triangle
+        1, 2, 3  // second triangle
+    };
+
+	unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+    // set the texture wrapping parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // set texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load image, create texture and generate mipmaps
+    int width, height;
+    // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
+    unsigned char *data = parse_bmp_32bit("/Users/baudiber/scop/textures/wall.bmp", &width, &height, 0);
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    free(data);
 //	unsigned int i = 0;
 //	while (i < e->data_size.points)
 //	{
@@ -137,12 +198,13 @@ void run(t_env *e)
 //		i += 3;
 //	}
  	t_mat4x4 	model;
+ 	t_mat4x4 	projection;
  	t_mat4x4 	view;
 
 	model = identity_mat4x4();
 	//view = identity_mat4x4();
 
-	view = scale_mat4x4(vec4(0.0f, 0.0f, -3.0f));
+	view = translate_mat4x4(model, vec4(0.0f, 0.0f, -3.0f));
 
 
 	unsigned int shader_program;
@@ -153,27 +215,45 @@ void run(t_env *e)
 
 	unsigned int VBO;
 	unsigned int VAO;
-	//unsigned int EBO;
+	unsigned int EBO;
 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
-	//glGenBuffers(1, &EBO);
+	glGenBuffers(1, &EBO);
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(t_vec3) * (e->data_size.points / 3), e->mesh.vertices, GL_STATIC_DRAW);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * e->data_size.indices, e->mesh.indices, GL_STATIC_DRAW);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(t_vec3) * (e->data_size.points / 3), e->mesh.vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof( indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * (sizeof(float)), (void*)0);
-	glEnableVertexAttribArray(0);
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * (sizeof(float)), (void*)0);
+	//glEnableVertexAttribArray(0);
+
+
+	// position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    // color attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    // texture coord attribute
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-
 	//glEnable(GL_DEPTH_TEST);
 
+	int modelLoc = glGetUniformLocation(shader_program, "model");
+glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &model);
+	int viewloc = glGetUniformLocation(shader_program, "view");
+glUniformMatrix4fv(viewloc, 1, GL_FALSE, &view);
+	int projLoc = glGetUniformLocation(shader_program, "projection");
+glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 	while (!glfwWindowShouldClose(e->window)) 
 	{
 		process_inputs(e->window);
@@ -181,10 +261,11 @@ void run(t_env *e)
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		glBindTexture(GL_TEXTURE_2D, texture);
 		glUseProgram(shader_program);
 		glBindVertexArray(VAO);
-		//glDrawElements(GL_TRIANGLES, e->data_size.indices , GL_UNSIGNED_INT, 0);
-		glDrawArrays(GL_TRIANGLES, 0, 12);
+		glDrawElements(GL_TRIANGLES, 6 , GL_UNSIGNED_INT, 0);
+		//glDrawArrays(GL_TRIANGLES, 0, 12);
 
 		glfwSwapBuffers(e->window);
 		glfwPollEvents();
@@ -192,6 +273,6 @@ void run(t_env *e)
 
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
-	//glDeleteBuffers(1, &EBO);
+	glDeleteBuffers(1, &EBO);
 	glDeleteProgram(shader_program);
 }

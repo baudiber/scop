@@ -6,7 +6,7 @@
 #    By: baudiber <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/13 12:30:36 by baudiber          #+#    #+#              #
-#    Updated: 2020/06/19 20:23:16 by wm               ###   ########.fr        #
+#    Updated: 2020/06/22 18:11:42 by baudiber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,16 +32,17 @@ B			=	\033[34m
 W			=	\033[0m
 O			=	\033[33m
 
-CC 			=	clang
 FLAGS		=	-Wall -Werror -Wextra
-INCLUDES	=	-I $(INC_DIR) `pkg-config --cflags glfw3`
+INCLUDES	=	-I$(INC_DIR) `pkg-config --cflags glfw3`
 HEADER_H	=	$(INC_DIR)/$(NAME).h
 
 OBJ 		=	$(addprefix $(OBJ_DIR)/,$(SRC:.c=.o))
 ifeq ($(shell uname -s), Darwin)
-	LIBS		=	-L $(LIBFT_DIR) -lft -L $(LIBGRAPH_DIR) -lgraph `pkg-config --static --libs glfw3` -framework OpenGL -framework Appkit -shared
+   LIBS		=	-L $(LIBFT_DIR) -lft -L $(LIBGRAPH_DIR) -lgraph `pkg-config --static --libs glfw3` -framework OpenGL -framework Appkit
+   CC 			=	gcc
 else ifeq ($(shell uname -s), Linux) 
 	LIBS		=	-L $(LIBFT_DIR) -lft -L $(LIBGRAPH_DIR) -lgraph `pkg-config --static --libs glfw3` -lGL -lX11 -lpthread -lXrandr -lXi -ldl
+	CC 			=	clang
 endif
 
 all: art $(NAME)

@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 16:39:12 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/19 15:57:11 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/22 19:29:20 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_mat4x4	mult_4x4mat(t_mat4x4 m1, t_mat4x4 m2)
 	return (res);
 }
 
-t_vec4 	translate_mat4x4(t_vec4 v, t_mat4x4 mat)
+t_vec4 	mult_mat4x4(t_vec4 v, t_mat4x4 mat)
 {
 	t_vec4	res;
 

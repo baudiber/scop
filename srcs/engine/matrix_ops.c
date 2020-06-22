@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 15:16:10 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/19 16:50:48 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/22 19:26:26 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,14 @@ t_mat4x4	scale_mat4x4(t_vec4 scale)
 	mat.m[1][1] = scale.y;
 	mat.m[2][2] = scale.z;
 	mat.m[3][3] = 1.0;
+	return (mat);
+}
+
+t_mat4x4	translate_mat4x4(t_mat4x4 mat, t_vec4 vec)
+{
+	mat.m[3][0] = vec.x;
+	mat.m[3][1] = vec.y;
+	mat.m[3][2] = vec.z;
+	mat.m[3][3] = vec.w; 
 	return (mat);
 }
