@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/22 19:24:36 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/25 18:30:30 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,13 @@ void    run(t_env *e);
 void 	process_inputs(GLFWwindow *window);
 
 t_mat4x4	scale_mat4x4(t_vec4 scale);
-t_mat4x4	translate_mat4x4(t_mat4x4 mat, t_vec4 vec);
+t_mat4x4	translate_mat4x4(t_mat4x4 mat, t_vec3 vec);
 t_mat4x4	identity_mat4x4(void);
+t_mat4x4 	perspective(float fovy, float aspect_ratio, float near, float far);
+t_mat4x4 	rotation_mat4x4(t_mat4x4 src_mat, float angle, t_vec3 axis);
 
+void 		print_mat(t_mat4x4 mat);
+float 		deg_to_rad(float angle);
+float 		rad_to_deg(float angle);
 
 #endif

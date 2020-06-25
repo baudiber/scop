@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/25 19:04:07 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/25 18:58:51 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,10 @@ const char *vertexShaderSource = "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
     "layout (location = 1) in vec2 aTexCoord;\n"
     "out vec2 TexCoord;\n"
-	"uniform mat4 model;\n"
-	"uniform mat4 view;\n"
-	"uniform mat4 projection;\n"
+	"uniform mat4 transform;\n"
     "void main()\n"
     "{\n"
-    "   gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
+    "   gl_Position = transform * vec4(aPos, 1.0);\n"
 	" 	TexCoord = aTexCoord;\n"
     "}\0";
 
@@ -173,19 +171,17 @@ void run(t_env *e)
 //		i += 3;
 //	}
  	t_mat4x4 	model;
+ 	//t_mat4x4 	projection;
+ 	//t_mat4x4 	view;
+
 	model = identity_mat4x4();
-	model = rotation_mat4x4(model, deg_to_rad(-55.0f), vec3(1.0f, 0.0f, 0.0f));
- 	t_mat4x4 	view;
-	view = identity_mat4x4();
-	view = translate_mat4x4(view, vec3(0.0f, 0.0f, -3.0f));
- 	t_mat4x4 	projection;
-	projection = perspective(deg_to_rad(45.0f), WIN_W / (float)WIN_H, 0.1f, 100.0f);
-
-
+	//view = identity_mat4x4();
 	//projection = identity_mat4x4();
 
-	//print_mat(model);
+	model = rotation_mat4x4(model, deg_to_rad(90.0f), vec3(0.0f, 0.0f, 1.0f));
+	print_mat(model);
 	//view = translate_mat4x4(model, vec4(0.0f, 0.0f, -3.0f));
+	//projection = perspective(deg_to_rad(45.0f), WIN_W / (float)WIN_H, 0.1f, 100.0f);
 
 	unsigned int shader_program;
 	shader_program = compile_shaders();
@@ -244,18 +240,18 @@ void run(t_env *e)
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-	//	t_mat4x4 trans = identity_mat4x4();
-	//	//trans = scale_4x4mat(trans, vec3(0.5f, 0.5f, 0.5f));
-	//	trans = translate_mat4x4(trans, vec3(0.5f, -0.5f, 0.0f));
-	//	trans = rotation_mat4x4(trans, (float)glfwGetTime(), vec3(0.0f, 0.0f, 1.0f));
+		t_mat4x4 trans = identity_mat4x4();
+		//trans = scale_4x4mat(trans, vec3(0.5f, 0.5f, 0.5f));
+		trans = translate_mat4x4(trans, vec3(0.5f, -0.5f, 0.0f));
+		trans = rotation_mat4x4(trans, (float)glfwGetTime(), vec3(0.0f, 0.0f, 1.0f));
 
-		int modelLoc = glGetUniformLocation(shader_program, "model");
-		int viewloc = glGetUniformLocation(shader_program, "view");
-		int projLoc = glGetUniformLocation(shader_program, "projection");
+		int modelLoc = glGetUniformLocation(shader_program, "transform");
+	//	int viewloc = glGetUniformLocation(shader_program, "view");
+	//	int projLoc = glGetUniformLocation(shader_program, "projection");
+	//	glUniformMatrix4fv(projLoc, 1, GL_FALSE, &projection.m[0][0]);
 
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &model.m[0][0]);
-		glUniformMatrix4fv(viewloc, 1, GL_FALSE, &view.m[0][0]);
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, &projection.m[0][0]);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &trans.m[0][0]);
+	//	glUniformMatrix4fv(viewloc, 1, GL_FALSE, &view.m[0][0]);
 
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glUseProgram(shader_program);

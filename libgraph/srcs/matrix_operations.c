@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 16:39:12 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/22 19:29:20 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/25 18:54:57 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,18 @@ t_mat4x4	mult_4x4mat(t_mat4x4 m1, t_mat4x4 m2)
 		}
 		i++;
 	}
+	return (res);
+}
+
+t_mat4x4	scale_4x4mat(t_mat4x4 m1, t_vec3 scale)
+{
+	t_mat4x4	res;
+
+	res.m[0][0] = m1.m[0][0] * scale.x;
+	res.m[1][1] = m1.m[1][1] * scale.y;
+	res.m[2][2] = m1.m[2][2] * scale.z;
+	res.m[3][3] = m1.m[3][3];
+
 	return (res);
 }
 
