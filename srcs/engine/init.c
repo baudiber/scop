@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:24 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/22 18:09:43 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/26 18:37:19 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ bool init(t_env *e)
 		glfwTerminate();
 		return (false);
 	}
+	//glfwSetInputMode(e->window, GLFW_STICKY_KEYS, GLFW_TRUE);
 	glfwMakeContextCurrent(e->window);
 	glfwSetFramebufferSizeCallback(e->window, framebuffer_size_callback);
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
