@@ -9,7 +9,6 @@
 // usemtl <material name>
 // s on/off
 // f  for faces   followed by vectex by index (starting at 1)
-
 static void check_data(int fd, t_size *data_size)
 {
     char    *line;
@@ -18,12 +17,14 @@ static void check_data(int fd, t_size *data_size)
     unsigned int     vecs;
 	unsigned int 		indices;
 	unsigned int 	points;
+	unsigned int 	face;
 	char 	**data;
 
     faces = 0;
     vecs = 0;
 	indices = 0;
 	points = 0;
+	face = 0;
     while ((rd = get_next_line(fd, &line)) > 0)
     {
         if (line && line[0] == 'v')
@@ -36,7 +37,11 @@ static void check_data(int fd, t_size *data_size)
         else if (line && line[0] == 'f')
 		{
 			data = ft_strsplit(line, ' ');
-            indices += ft_tablen(data) - 1;
+			face = ft_tablen(data) - 1;
+			if (face == 3) 
+            	indices += 3;
+			else if (face == 4)
+				indices += 6;
 			ft_freetab(data);
 			faces++;
 		}
@@ -48,12 +53,12 @@ static void check_data(int fd, t_size *data_size)
 	data_size->v_nb = vecs;
 	data_size->indices = indices;
 	data_size->points = points;
-    ft_putchar('v');
-    ft_putnbr(vecs);
-    ft_putchar(' ');
-    ft_putchar('f');
-    ft_putnbr(faces);
-    ft_putchar('\n');
+   // ft_putchar('v');
+   // ft_putnbr(vecs);
+   // ft_putchar(' ');
+   // ft_putchar('f');
+   // ft_putnbr(faces);
+   // ft_putchar('\n');
 }
 
 static void parse_v_data(char ***data_ptr, t_vec3 *verts)
@@ -68,9 +73,9 @@ static void parse_v_data(char ***data_ptr, t_vec3 *verts)
 		exit (0);
 	}
 
-	verts->x = ft_atod(data[1]);
-	verts->y = ft_atod(data[2]);
-	verts->z = ft_atod(data[3]);
+	verts->x = atof(data[1]);
+	verts->y = atof(data[2]);
+	verts->z = atof(data[3]);
 	//printf("%f %f %f\n", verts->x, verts->y, verts->z);
 }
 
@@ -85,9 +90,9 @@ static void fill_points(char ***data_ptr, float **verts, int *index)
 		ft_putendl("error parsing OBJ's vecs");
 		exit (0);
 	}
-	(*verts)[*index] = ft_atod(data[1]);
-	(*verts)[(*index) + 1] = ft_atod(data[2]);
-	(*verts)[(*index) + 2] = ft_atod(data[3]);
+	(*verts)[*index] = atof(data[1]);
+	(*verts)[(*index) + 1] = atof(data[2]);
+	(*verts)[(*index) + 2] = atof(data[3]);
 	(*index) += 3;
 }
 
@@ -125,12 +130,31 @@ static void fill_indices(char ***data_ptr, unsigned int **indices, int *index)
 		ft_putendl("error parsing OBJ's face (size < 3)");
 		exit (0);
 	}
-	i = 1;
-	while (i < tablen)
+
+	if (tablen == 4) // triangle
 	{
-		(*indices)[(*index)] = ft_atoi(data[i]) - 1;
+		i = 1;
+		while (i < tablen)
+		{
+			(*indices)[(*index)] = ft_atoi(data[i]) - 1;
+			++(*index);
+			i++;
+		}
+	}
+	else if (tablen == 5) // quad
+	{
+		(*indices)[(*index)] = ft_atoi(data[1]) - 1;
 		++(*index);
-		i++;
+		(*indices)[(*index)] = ft_atoi(data[2]) - 1;
+		++(*index);
+		(*indices)[(*index)] = ft_atoi(data[3]) - 1;
+		++(*index);
+		(*indices)[(*index)] = ft_atoi(data[3]) - 1;
+		++(*index);
+		(*indices)[(*index)] = ft_atoi(data[4]) - 1;
+		++(*index);
+		(*indices)[(*index)] = ft_atoi(data[1]) - 1;
+		++(*index);
 	}
 }
 
@@ -179,7 +203,8 @@ void 	malloc_data(t_size *data_size, t_mesh *mesh)
 		exit(0);
 	if (!(mesh->faces = (int **)malloc(sizeof(int *) * data_size->f_nb)))
 		exit(0);
-	ft_putnbr(data_size->indices);
+	//ft_putnbr(data_size->indices);
+	// TODO malloc has to be different
 	if (!(mesh->indices = (unsigned int *)malloc(sizeof(int) * data_size->indices)))
 		exit(0);
 }

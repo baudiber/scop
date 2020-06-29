@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/26 18:40:11 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/06/29 20:35:17 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 const char *vertexShaderSource = "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
     //"layout (location = 1) in vec2 aTexCoord;\n"
-   // "out vec2 TexCoord;\n"
+    //"out vec2 TexCoord;\n"
 	"uniform mat4 model;\n"
 	"uniform mat4 view;\n"
 	"uniform mat4 projection;\n"
@@ -26,12 +26,12 @@ const char *vertexShaderSource = "#version 330 core\n"
     "}\0";
 
 const char *fragmentShaderSource = "#version 330 core\n"
-// 	"in vec2 TexCoord;\n"
-//	"uniform sampler2D ourTexture;\n"
+ 	//"in vec2 TexCoord;\n"
+	//"uniform sampler2D ourTexture;\n"
 "out vec4 FragColor;\n"
     "void main()\n"
     "{\n"
-    "   FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);\n"
+    "   FragColor = vec4(0.5f, 0.8f, 0.8f, 1.0f);\n"
     //"   FragColor = texture(ourTexture, TexCoord);\n"
     "}\n\0";
 
@@ -148,9 +148,9 @@ void run(t_env *e)
 
  	t_mat4x4 	view;
 	view = identity_mat4x4();
-	view = translate_mat4x4(view, vec3(0.0f, 0.0f, -3.0f));
+	view = translate_mat4x4(view, vec3(0.0f, -0.5f, -3.0f));
  	t_mat4x4 	projection;
-	projection = perspective(deg_to_rad(45.0f), WIN_W / (float)WIN_H, 0.1f, 100.0f);
+	projection = perspective(deg_to_rad(50.0f), WIN_W / (float)WIN_H, 0.1f, 70.0f);
 
 	unsigned int shader_program;
 	shader_program = compile_shaders();
@@ -168,7 +168,7 @@ void run(t_env *e)
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(t_vec3) * (e->data_size.points / 3), &e->mesh.vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(t_vec3) * e->data_size.v_nb , &e->mesh.vertices[0], GL_STATIC_DRAW);
 	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -177,7 +177,7 @@ void run(t_env *e)
 
 
 	// position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 	glBindVertexArray(0);
     // texture coord attribute
@@ -185,25 +185,30 @@ void run(t_env *e)
  //   glEnableVertexAttribArray(1);
 
 //	unsigned int texture;
-//    glGenTextures(1, &texture);
-//    glBindTexture(GL_TEXTURE_2D, texture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
-//    // set the texture wrapping parameters
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-//    // set texture filtering parameters
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // load image, create texture and generate mipmaps
- //   int width, height;
- //   // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
- //   unsigned char *data = parse_bmp_32bit("/Users/baudiber/scop/textures/wall.bmp", &width, &height, 0);
- //   if (data)
- //   {
- //       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
- //       glGenerateMipmap(GL_TEXTURE_2D);
- //   }
- //   free(data);
-	
+//	glGenTextures(1, &texture);
+//	glBindTexture(GL_TEXTURE_2D, texture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+//	// set the texture wrapping parameters
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+//	// set texture filtering parameters
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//	// load image, create texture and generate mipmaps
+	int width, height;
+	// The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
+	unsigned char *data = parse_bmp_32bit("../textures/wall.bmp", &width, &height, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	if (!data)
+	{
+		ft_putendl("wrong texture path");
+		exit(0);
+	}
+	free(data);
+
 	glEnable(GL_DEPTH_TEST);
 
 	while (!glfwWindowShouldClose(e->window)) 
@@ -233,7 +238,7 @@ void run(t_env *e)
 		glBindVertexArray(VAO);
 		//glDrawElements(GL_TRIANGLES, 6 , GL_UNSIGNED_INT, 0);
 		glDrawElements(GL_TRIANGLES, e->data_size.indices , GL_UNSIGNED_INT, 0);
-		//glDrawArrays(GL_TRIANGLES, 0, e->data_size.points);
+		//glDrawArrays(GL_TRIANGLES, 0, e->data_size.v_nb);
 	//	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		glfwSwapBuffers(e->window);
