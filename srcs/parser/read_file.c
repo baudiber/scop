@@ -74,27 +74,30 @@ static void parse_v_data(char ***data_ptr, t_vec3 *verts)
 	}
 
 	verts->x = atof(data[1]);
+	printf("%s %f %f \n",data[1], verts->x, atof(data[1]));
 	verts->y = atof(data[2]);
+	printf("%s %f %f \n", data[2],verts->y, atof(data[2]));
 	verts->z = atof(data[3]);
+	printf("%s %f %f \n", data[3], verts->z, atof(data[3]));
 	//printf("%f %f %f\n", verts->x, verts->y, verts->z);
 }
 
-static void fill_points(char ***data_ptr, float **verts, int *index)
-{
-	char	**data = *data_ptr;
-	int		tablen;
-
-	tablen = ft_tablen(data);
-	if (tablen != 4)
-	{
-		ft_putendl("error parsing OBJ's vecs");
-		exit (0);
-	}
-	(*verts)[*index] = atof(data[1]);
-	(*verts)[(*index) + 1] = atof(data[2]);
-	(*verts)[(*index) + 2] = atof(data[3]);
-	(*index) += 3;
-}
+//static void fill_points(char ***data_ptr, float **verts, int *index)
+//{
+//	char	**data = *data_ptr;
+//	int		tablen;
+//
+//	tablen = ft_tablen(data);
+//	if (tablen != 4)
+//	{
+//		ft_putendl("error parsing OBJ's vecs");
+//		exit (0);
+//	}
+//	(*verts)[*index] = ft_atod(data[1]);
+//	(*verts)[(*index) + 1] = ft_atod(data[2]);
+//	(*verts)[(*index) + 2] = ft_atod(data[3]);
+//	(*index) += 3;
+//}
 
 static void parse_f_data(char ***data_ptr, int **face)
 {
@@ -177,8 +180,8 @@ static void get_data(int fd, t_mesh *mesh)
 		if (line && line[0] == 'v')
 		{
 			data = ft_strsplit(line, ' ');
-			parse_v_data(&data, &mesh->vertices[vec]);
-			fill_points(&data, &mesh->verts, &vert_index);
+			parse_v_data(&data, &mesh->vertices[vec].pos);
+			//fill_points(&data, &mesh->verts, &vert_index);
 			ft_freetab(data);
 			vec++;
 		}
@@ -197,7 +200,7 @@ static void get_data(int fd, t_mesh *mesh)
 
 void 	malloc_data(t_size *data_size, t_mesh *mesh)
 {
-	if (!(mesh->vertices = (t_vec3 *)malloc(sizeof(t_vec3) * data_size->v_nb)))
+	if (!(mesh->vertices = (t_vertex *)malloc(sizeof(t_vertex) * data_size->v_nb)))
 		exit(0);
 	if (!(mesh->verts = (float *)malloc(sizeof(float) * data_size->points)))
 		exit(0);
@@ -207,6 +210,25 @@ void 	malloc_data(t_size *data_size, t_mesh *mesh)
 	// TODO malloc has to be different
 	if (!(mesh->indices = (unsigned int *)malloc(sizeof(int) * data_size->indices)))
 		exit(0);
+}
+
+void 	set_vert_color(t_size *data_size, t_mesh *mesh)
+{
+	unsigned int i;
+	float 			color;
+
+	color = 0;
+	i = 0;
+	while (i < data_size->v_nb)
+	{
+		if (color > 1.0)
+			color = 0.1;
+		mesh->vertices[i].color = vec4(0.0 + color, 0.0 + color, 0.0 + color);
+		mesh->vertices[i + 1].color = vec4(0.0 + color, 0.0 + color, 0.0 + color);
+		mesh->vertices[i + 2].color = vec4(0.0 + color, 0.0 + color, 0.0 + color);
+		color += 0.01;
+		i += 3;
+	}
 }
 
 bool    parse_file(char *file_name, t_env *e)
@@ -225,6 +247,7 @@ bool    parse_file(char *file_name, t_env *e)
     if ((fd = open(file_name, O_RDONLY)) < 0)
        return (false);
 	get_data(fd, &e->mesh);
+	set_vert_color(&e->data_size, &e->mesh);
 
     return (true);
 }
