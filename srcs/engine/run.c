@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/30 18:46:47 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/01 18:11:04 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ const char *vertexShaderSource = "#version 410 core\n"
 	"uniform mat4 model;\n"
 	"uniform mat4 view;\n"
 	"uniform mat4 projection;\n"
-	"out vec4 color;\n"
+	"flat out vec4 color;\n"
 
     "void main()\n"
     "{\n"
@@ -32,7 +32,7 @@ const char *vertexShaderSource = "#version 410 core\n"
 const char *fragmentShaderSource = "#version 410 core\n"
 	"out vec4 FragColor;\n"
 
-	"in vec4 color;\n"
+	"flat in vec4 color;\n"
 //	"uniform vec3 objectColor;\n"
 //	"uniform vec3 lightColor;\n"
 

@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/30 18:44:29 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/01 18:36:12 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ struct s_size
 	unsigned int f_nb;
 	unsigned int indices;
 	unsigned int points;
+	t_vec3 		max;
+	t_vec3 		min;
 };
 
 struct s_mesh

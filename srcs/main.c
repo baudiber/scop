@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 14:09:41 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/17 16:20:54 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/01 18:39:23 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int     main(int ac, char **av)
 
     ft_putstr("Opening ");
     ft_putendl(av[1]);
+	ft_bzero(&e, sizeof(t_env));
     if (!parse_file(av[1], &e))
     {
         ft_putendl("ERROR parsing file");
