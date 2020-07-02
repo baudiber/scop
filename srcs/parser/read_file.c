@@ -164,7 +164,6 @@ static void get_data(int fd, t_mesh *mesh)
 		{
 			data = ft_strsplit(line, ' ');
 			parse_v_data(&data, &mesh->vertices[vec].pos);
-			//fill_points(&data, &mesh->verts, &vert_index);
 			ft_freetab(data);
 			vec++;
 		}
@@ -190,7 +189,6 @@ void 	malloc_data(t_size *data_size, t_mesh *mesh)
 	if (!(mesh->faces = (int **)malloc(sizeof(int *) * data_size->f_nb)))
 		exit(0);
 	//ft_putnbr(data_size->indices);
-	// TODO malloc has to be different
 	if (!(mesh->indices = (unsigned int *)malloc(sizeof(int) * data_size->indices)))
 		exit(0);
 }
@@ -222,6 +220,13 @@ void 	get_min_max(t_env *e)
 	i = 0;
 	while (i < e->data_size.v_nb)
 	{
+		//e->mesh.vertices[i].pos = normalize_vec3(e->mesh.vertices[i].pos);	
+		//e->mesh.vertices[i].pos.x = e->mesh.vertices[i].pos.x *2;
+		//e->mesh.vertices[i].pos.y = e->mesh.vertices[i].pos.y *3;
+		//e->mesh.vertices[i].pos.z = e->mesh.vertices[i].pos.z *3;
+		//printf("%f %f %f\n", e->mesh.vertices[i].pos.x,e->mesh.vertices[i].pos.y,e->mesh.vertices[i].pos.z);
+
+
 		if (e->mesh.vertices[i].pos.x < e->data_size.min.x)
 			e->data_size.min.x = e->mesh.vertices[i].pos.x;
 		else if (e->mesh.vertices[i].pos.x > e->data_size.max.x)
