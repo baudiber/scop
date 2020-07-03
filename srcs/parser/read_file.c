@@ -218,6 +218,12 @@ void 	get_min_max(t_env *e)
 	unsigned int i;
 
 	i = 0;
+	e->data_size.min.x = e->mesh.vertices[i].pos.x;
+	e->data_size.max.x = e->mesh.vertices[i].pos.x;
+	e->data_size.min.y = e->mesh.vertices[i].pos.y;
+	e->data_size.max.y = e->mesh.vertices[i].pos.y;
+	e->data_size.min.z = e->mesh.vertices[i].pos.z;
+	e->data_size.max.z = e->mesh.vertices[i].pos.z;
 	while (i < e->data_size.v_nb)
 	{
 		//e->mesh.vertices[i].pos = normalize_vec3(e->mesh.vertices[i].pos);	

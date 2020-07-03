@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 15:16:10 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/02 18:38:15 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/03 16:59:58 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,13 @@ t_mat4x4 	rotation_mat4x4(t_mat4x4 src_mat, float angle, t_vec3 axis)
 	t_vec3   norm_axis;
 	t_vec3   temp;
 
+	rot_mat = src_mat;
 	cos_angle = cos(angle);
 	sin_angle = sin(angle);
 	norm_axis = normalize_vec3(axis);	
-	temp.x = norm_axis.x * (1 - cos_angle);
-	temp.y = norm_axis.y * (1 - cos_angle);
-	temp.z = norm_axis.z * (1 - cos_angle);
+	temp.x = norm_axis.x * (1.0 - cos_angle);
+	temp.y = norm_axis.y * (1.0 - cos_angle);
+	temp.z = norm_axis.z * (1.0 - cos_angle);
 
 	rot_mat.m[0][0] = cos_angle + temp.x * norm_axis.x;
 	rot_mat.m[0][1] = 0 + temp.x * norm_axis.y + sin_angle * norm_axis.z;
