@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 15:16:10 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/03 16:59:58 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/06 18:20:09 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,9 @@ t_vec3 		normalize_vec3(t_vec3 v)
 	float 	mag;
 
 	mag = magnitude_vec3(v);
-	if (mag < 0)
+	if (mag ==  0)
 	{
-		ft_putendl("vec3 magnitude is below 0");
+		ft_putendl("vec3 magnitude is 0");
 		return (v);
 	}
 	res.x = v.x / mag;
@@ -121,7 +121,7 @@ t_mat4x4 	rotation_mat4x4(t_mat4x4 src_mat, float angle, t_vec3 axis)
 	rot_mat.m[3][1] = 0.0f;
 	rot_mat.m[3][2] = 0.0f;
 	rot_mat.m[3][3] = 1.0f;
-	return (mult_4x4mat(rot_mat, src_mat));
+	return (mult_4x4mat(src_mat, rot_mat));
 }
 
 float 		deg_to_rad(float angle)

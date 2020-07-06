@@ -1,0 +1,12 @@
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/cask-fonts"
+tap "homebrew/core"
+brew "bear"
+brew "llvm"
+brew "ccls"
+brew "glfw"
+brew "neovim", args: ["HEAD"]
+brew "node"
+brew "sdl2"
+cask "font-fira-code"

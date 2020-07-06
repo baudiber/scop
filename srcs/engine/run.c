@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/03 17:17:35 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/06 18:22:33 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,9 +140,10 @@ void run(t_env *e)
 	printf("X max min %f %f\n", e->data_size.max.x ,e->data_size.min.x);
 	printf("X offset %f \n", -(e->data_size.max.x + e->data_size.min.x));
 	printf("Y max min %f %f\n", e->data_size.max.y ,e->data_size.min.y);
+	printf("Y offset %f \n", -(e->data_size.max.y + e->data_size.min.y));
 	printf("Z max min %f %f\n", e->data_size.max.z ,e->data_size.min.z);
+	printf("Z offset %f \n", -(e->data_size.max.z + e->data_size.min.z));
 	//view = translate_mat4x4(view, vec3(-(e->data_size.max.x + e->data_size.min.x), -(e->data_size.max.y + e->data_size.min.y) , (-(e->data_size.max.z - e->data_size.min.z) - 0.1) * 2));
-
 
 	unsigned int shader_program;
 	shader_program = compile_shaders();
@@ -185,11 +186,11 @@ void run(t_env *e)
  	t_mat4x4 	view;
  	t_mat4x4 	projection;
 
-
 	view = identity_mat4x4();
-	//view = translate_mat4x4(view, vec3(0.0f, 0.0f, -3.0f)) ;
-	view = translate_mat4x4(view, vec3(-(e->data_size.max.x + e->data_size.min.x), (e->data_size.max.y + e->data_size.min.y), -(e->data_size.max.z + e->data_size.min.z)));
+	view = translate_mat4x4(view, vec3(0.0f, 0.0f, -3.0f)) ;
+	//view = translate_mat4x4(view, vec3(-(e->data_size.max.x + e->data_size.min.x), (e->data_size.max.y + e->data_size.min.y), -(e->data_size.max.z + e->data_size.min.z)));
 	projection = perspective(deg_to_rad(50.0f), WIN_W / (float)WIN_H, 0.1f, 100.0f);
+	//projection = identity_mat4x4();
 
 	while (!glfwWindowShouldClose(e->window)) 
 	{
@@ -198,13 +199,12 @@ void run(t_env *e)
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//t_mat4x4    scale;
-		//scale = identity_mat4x4();
-		//scale = scale_4x4mat(scale, vec3(0.3f, 0.3f, 0.3f));
-		//model = mult_4x4mat(scale, model);
+		t_mat4x4    scale;
 		model = identity_mat4x4();
-		model = translate_mat4x4(model, vec3(-(e->data_size.max.x + e->data_size.min.x) + 1, -(e->data_size.max.y + e->data_size.min.y), -(e->data_size.max.z + e->data_size.min.z)));
-		//model = rotation_mat4x4(model, deg_to_rad(-90.0f), vec3(0.0f, 1.0f, 0.0f));
+		scale = identity_mat4x4();
+		scale = scale_4x4mat(scale, vec3(0.3f, 0.3f, 0.3f));
+		model = mult_4x4mat(scale, model);
+		model = translate_mat4x4(model, vec3(-(e->data_size.max.x + e->data_size.min.x) / 2.0f, -(e->data_size.max.y + e->data_size.min.y) / 2.0f, -(e->data_size.max.z + e->data_size.min.z) / 2.0f));
 		model = rotation_mat4x4(model, (float)glfwGetTime() * deg_to_rad(45.0f), vec3(0.0f, 1.0f, 0.0f));
 		//print_mat(model);
 	//	printf("---------\n");
