@@ -6,15 +6,15 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/02 17:36:51 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/07 19:09:05 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SCOP_H
 # define SCOP_H
 
-# define WIN_W 1024
-# define WIN_H 768
+# define WIN_W 1920
+# define WIN_H 1080
 
 # include "../libft/libft.h"
 # include "../libgraph/includes/libgraph.h"
@@ -33,33 +33,33 @@ typedef struct s_vertex t_vertex;
 
 struct s_vertex {
 	t_vec3 	pos;
-	t_vec4  color;
+	t_vec2  tex;
 };
 
 struct s_size
 {
-	unsigned int v_nb;
-	unsigned int f_nb;
-	unsigned int indices;
-	unsigned int points;
-	t_vec3 		max;
-	t_vec3 		min;
+	unsigned int 	v_nb;
+	unsigned int 	f_nb;
+	unsigned int 	indices;
+	unsigned int 	points;
+	t_vec3 			max;
+	t_vec3 			min;
 };
 
 struct s_mesh
 {
-	//t_vec3	*vertices;
-	t_vertex *vertices;
-	int		**faces;
-	float 	*verts;
+	t_vertex 		*vertices;
+	int				**faces;
+	float 			*verts;
 	unsigned int 	*indices;
 };
 
 struct s_env
 {
-	GLFWwindow* window;
-	t_mesh 		mesh;
-	t_size 		data_size;
+	GLFWwindow* 	window;
+	t_mesh 			mesh;
+	t_size 			data_size;
+	int 			shading;
 };
 
 bool    parse_file(char *file_name, t_env *e);

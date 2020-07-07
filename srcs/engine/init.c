@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:24 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/26 18:37:19 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/07 19:11:53 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ bool init(t_env *e)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #ifdef __APPLE__
-	ft_putendl("Mac setting applied.");
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 	glfwSetErrorCallback(error_callback);
 
+	glfwWindowHint(GLFW_SAMPLES, 8);
 	e->window = glfwCreateWindow( WIN_W, WIN_H, "scop", NULL, NULL);
 	if (!e->window) 
 	{
@@ -45,7 +45,6 @@ bool init(t_env *e)
 		glfwTerminate();
 		return (false);
 	}
-	//glfwSetInputMode(e->window, GLFW_STICKY_KEYS, GLFW_TRUE);
 	glfwMakeContextCurrent(e->window);
 	glfwSetFramebufferSizeCallback(e->window, framebuffer_size_callback);
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -53,5 +52,10 @@ bool init(t_env *e)
 		ft_putendl("Failed to init GLAD");
 		return (false);
 	}
+	e->shading = 1;
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_PROGRAM_POINT_SIZE);
+	glEnable(GL_MULTISAMPLE);
     return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/06 18:22:33 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/07 19:10:51 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,38 @@
 
 const char *vertexShaderSource = "#version 410 core\n"
     "layout (location = 0) in vec3 aPos;\n"
-    "layout (location = 1) in vec4 myColor;\n"
+    "layout (location = 1) in vec2 texCoord;\n"
 
 	"uniform mat4 model;\n"
 	"uniform mat4 view;\n"
 	"uniform mat4 projection;\n"
+
 	"flat out vec4 color;\n"
 
     "void main()\n"
     "{\n"
     "   gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
-    //"   color = myColor;\n"
-	" 	color = vec4( aPos.x * 0.4, aPos.y * 0.4 , aPos.z * 0.4  , 1.0);\n"
+	" 	gl_PointSize = gl_Position.z;\n"
+	" 	color = vec4( aPos.x * 0.4, aPos.y * 0.3 , aPos.z * 0.8  , 1.0);\n"
     "}\0";
 
 const char *fragmentShaderSource = "#version 410 core\n"
 	"out vec4 FragColor;\n"
 
 	"flat in vec4 color;\n"
-//	"uniform vec3 objectColor;\n"
+	"uniform int shading;\n"
 //	"uniform vec3 lightColor;\n"
 
     "void main()\n"
     "{\n"
-    "   FragColor = color;\n"
+	"   if (shading == 0)\n"
+	"   {\n"
+    "   	FragColor = color;\n"
+	"   }\n"
+	" 	else\n"
+	" 	{\n"
+    "   	FragColor = vec4(color.x, color.y, color.z, 0.5f);\n"
+	" 	}\n"
     //"   FragColor = vec4(lightColor * objectColor, 1.0);\n"
     "}\n\0";
 
@@ -137,14 +145,6 @@ t_vec3 vec3(float x, float y, float z)
 
 void run(t_env *e)
 {
-	printf("X max min %f %f\n", e->data_size.max.x ,e->data_size.min.x);
-	printf("X offset %f \n", -(e->data_size.max.x + e->data_size.min.x));
-	printf("Y max min %f %f\n", e->data_size.max.y ,e->data_size.min.y);
-	printf("Y offset %f \n", -(e->data_size.max.y + e->data_size.min.y));
-	printf("Z max min %f %f\n", e->data_size.max.z ,e->data_size.min.z);
-	printf("Z offset %f \n", -(e->data_size.max.z + e->data_size.min.z));
-	//view = translate_mat4x4(view, vec3(-(e->data_size.max.x + e->data_size.min.x), -(e->data_size.max.y + e->data_size.min.y) , (-(e->data_size.max.z - e->data_size.min.z) - 0.1) * 2));
-
 	unsigned int shader_program;
 	shader_program = compile_shaders();
 
@@ -179,18 +179,13 @@ void run(t_env *e)
 //	glBindVertexArray(light_VAO);
 //	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-	glEnable(GL_DEPTH_TEST);
-	
-
  	t_mat4x4 	model;
  	t_mat4x4 	view;
  	t_mat4x4 	projection;
 
 	view = identity_mat4x4();
-	view = translate_mat4x4(view, vec3(0.0f, 0.0f, -3.0f)) ;
-	//view = translate_mat4x4(view, vec3(-(e->data_size.max.x + e->data_size.min.x), (e->data_size.max.y + e->data_size.min.y), -(e->data_size.max.z + e->data_size.min.z)));
+	view = translate_mat4x4(view, vec3(0.0f, 0.0f, -(e->data_size.max.z - e->data_size.min.z) * 0.6f));
 	projection = perspective(deg_to_rad(50.0f), WIN_W / (float)WIN_H, 0.1f, 100.0f);
-	//projection = identity_mat4x4();
 
 	while (!glfwWindowShouldClose(e->window)) 
 	{
@@ -206,11 +201,11 @@ void run(t_env *e)
 		model = mult_4x4mat(scale, model);
 		model = translate_mat4x4(model, vec3(-(e->data_size.max.x + e->data_size.min.x) / 2.0f, -(e->data_size.max.y + e->data_size.min.y) / 2.0f, -(e->data_size.max.z + e->data_size.min.z) / 2.0f));
 		model = rotation_mat4x4(model, (float)glfwGetTime() * deg_to_rad(45.0f), vec3(0.0f, 1.0f, 0.0f));
-		//print_mat(model);
-	//	printf("---------\n");
+		int shadingLoc = glGetUniformLocation(shader_program, "shading");
 		int modelLoc = glGetUniformLocation(shader_program, "model");
 		int viewloc = glGetUniformLocation(shader_program, "view");
 		int projLoc = glGetUniformLocation(shader_program, "projection");
+		glUniform1i(shadingLoc, e->shading);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &model.m[0][0]);
 		glUniformMatrix4fv(viewloc, 1, GL_FALSE, &view.m[0][0]);
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, &projection.m[0][0]);

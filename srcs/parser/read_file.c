@@ -64,6 +64,7 @@ static void check_data(int fd, t_size *data_size)
 static void parse_v_data(char ***data_ptr, t_vec3 *verts)
 {
 	char	**data = *data_ptr;
+	char 	** split;
 	int		tablen;
 
 	tablen = ft_tablen(data);
@@ -72,8 +73,19 @@ static void parse_v_data(char ***data_ptr, t_vec3 *verts)
 		ft_putendl("error parsing OBJ's vecs");
 		exit (0);
 	}
+	// v 1/2 3/4 4/5
+
+	split = ft_strsplit(data[1], '/');
+	if (ft_tablen(split) == 2)
+	{
+		verts->x = atof(split[0]);
+	}
+
+
 
 	verts->x = atof(data[1]);
+
+
 //	printf("%s %f %f \n",data[1], verts->x, atof(data[1]));
 	verts->y = atof(data[2]);
 //	printf("%s %f %f \n", data[2],verts->y, atof(data[2]));
@@ -193,26 +205,6 @@ void 	malloc_data(t_size *data_size, t_mesh *mesh)
 		exit(0);
 }
 
-void 	set_vert_color(t_size *data_size, t_mesh *mesh)
-{
-	unsigned int i;
-	float 			color;
-
-	color = 0.1;
-	i = 0;
-	while (i < data_size->v_nb)
-	{
-		if (color > 1.0)
-			color = 0.2;
-		mesh->vertices[i].color = vec4(0.0 + color, 0.0 + color, 0.0 + color);
-		mesh->vertices[i + 1].color = vec4(0.0 + color, 0.0 + color, 0.0 + color);
-		mesh->vertices[i + 2].color = vec4(0.0 + color, 0.0 + color, 0.0 + color);
-		mesh->vertices[i + 3].color = vec4(0.0 + color, 0.0 + color, 0.0 + color);
-		color += 0.15;
-		i += 3;
-	}
-}
-
 void 	get_min_max(t_env *e)
 {
 	unsigned int i;
@@ -226,13 +218,6 @@ void 	get_min_max(t_env *e)
 	e->data_size.max.z = e->mesh.vertices[i].pos.z;
 	while (i < e->data_size.v_nb)
 	{
-		//e->mesh.vertices[i].pos = normalize_vec3(e->mesh.vertices[i].pos);	
-		//e->mesh.vertices[i].pos.x = e->mesh.vertices[i].pos.x *2;
-		//e->mesh.vertices[i].pos.y = e->mesh.vertices[i].pos.y *3;
-		//e->mesh.vertices[i].pos.z = e->mesh.vertices[i].pos.z *3;
-		//printf("%f %f %f\n", e->mesh.vertices[i].pos.x,e->mesh.vertices[i].pos.y,e->mesh.vertices[i].pos.z);
-
-
 		if (e->mesh.vertices[i].pos.x < e->data_size.min.x)
 			e->data_size.min.x = e->mesh.vertices[i].pos.x;
 		else if (e->mesh.vertices[i].pos.x > e->data_size.max.x)
@@ -265,7 +250,6 @@ bool    parse_file(char *file_name, t_env *e)
     if ((fd = open(file_name, O_RDONLY)) < 0)
        return (false);
 	get_data(fd, &e->mesh);
-	set_vert_color(&e->data_size, &e->mesh);
 	get_min_max(e);
 
     return (true);
