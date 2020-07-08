@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 14:09:41 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/01 18:39:23 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/08 17:57:13 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int     main(int ac, char **av)
         return (-1);
     }
 
-    run(&e);
+    //run(&e);
 
 	glfwTerminate();
     return (0);

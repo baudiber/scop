@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/07 19:10:51 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/08 17:08:20 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ const char *vertexShaderSource = "#version 410 core\n"
     "void main()\n"
     "{\n"
     "   gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
-	" 	gl_PointSize = gl_Position.z;\n"
-	" 	color = vec4( aPos.x * 0.4, aPos.y * 0.3 , aPos.z * 0.8  , 1.0);\n"
+	" 	gl_PointSize = gl_Position.z * 0.5;\n"
+	" 	color = vec4( gl_Position.x * 0.4, gl_Position.y * 0.3 , gl_Position.z * 0.8  , 1.0);\n"
     "}\0";
 
 const char *fragmentShaderSource = "#version 410 core\n"
@@ -148,8 +148,8 @@ void run(t_env *e)
 	unsigned int shader_program;
 	shader_program = compile_shaders();
 
-	printf("indicenb %d\n", e->data_size.indices);
-	printf("pointnb %d\n", e->data_size.points);
+//	printf("indicenb %d\n", e->data_size.indices);
+//	printf("pointnb %d\n", e->data_size.points);
 
 	unsigned int VBO;
 	unsigned int model_VAO;
@@ -185,19 +185,19 @@ void run(t_env *e)
 
 	view = identity_mat4x4();
 	view = translate_mat4x4(view, vec3(0.0f, 0.0f, -(e->data_size.max.z - e->data_size.min.z) * 0.6f));
-	projection = perspective(deg_to_rad(50.0f), WIN_W / (float)WIN_H, 0.1f, 100.0f);
+	projection = perspective(deg_to_rad(50.0f), WIN_W / (float)WIN_H, 0.1f, 1000.0f);
 
 	while (!glfwWindowShouldClose(e->window)) 
 	{
 		process_inputs(e->window);
 
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		t_mat4x4    scale;
 		model = identity_mat4x4();
 		scale = identity_mat4x4();
-		scale = scale_4x4mat(scale, vec3(0.3f, 0.3f, 0.3f));
+		scale = scale_4x4mat(scale, vec3(0.4f, 0.4f, 0.4f));
 		model = mult_4x4mat(scale, model);
 		model = translate_mat4x4(model, vec3(-(e->data_size.max.x + e->data_size.min.x) / 2.0f, -(e->data_size.max.y + e->data_size.min.y) / 2.0f, -(e->data_size.max.z + e->data_size.min.z) / 2.0f));
 		model = rotation_mat4x4(model, (float)glfwGetTime() * deg_to_rad(45.0f), vec3(0.0f, 1.0f, 0.0f));
