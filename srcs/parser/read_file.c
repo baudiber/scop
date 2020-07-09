@@ -10,25 +10,60 @@
 // s on/off
 // f  for faces   followed by vectex by index (starting at 1)
 
+t_vec_list 	*parse_vec_line(const char *line)
+{
+	t_vec_list *new;
+
+	new = (t_vec_list *)malloc(sizeof(t_vec_list));	
+	if (!new)
+	{
+		printf("malloc error\n");
+		exit (-1);
+	}
+
+	if ((sscanf(line, "%*s %f %f %f", &new->x, &new->y, &new->z)) != 3)
+		printf("sscanfn error\n");
+	new->next = NULL;
+	return (new);
+}
+
 static void new_parser(int fd, t_env *e)
 {
+	t_vec_list *tmp;
     int     rd;
     char    *line;
 
-	(void)e;
+	tmp = e->vec_list;
     while ((rd = get_next_line(fd, &line)) > 0)
 	{
-        //if (line && !ft_strncmp(line, "v ", 2))
-		//{
-		//	printf("%s\n", line);
-		//}
-		//else if (line && !ft_strncmp(line, "f ", 2))
-		//{
-		//	printf("%s\n", line);
-		//}
+        if (line && !ft_strncmp(line, "v ", 2))
+		{
+			printf("OK\n");
+			tmp = parse_vec_line(line);
+//			printf("%f %f %f\n", tmp->x, tmp->y, tmp->z);
+			if (!e->vec_list)
+			{
+				e->vec_list = tmp;
+			}
+			tmp = tmp->next;
+			//printf("%s\n", line);
+		}
+		else if (line && !ft_strncmp(line, "f ", 2))
+		{
+			//printf("%s\n", line);
+		}
         (line) ? ft_strdel(&line) : 0;
 	}
     (line) ? ft_strdel(&line) : 0;
+
+	tmp = e->vec_list;
+
+	while(tmp) 
+	{
+		printf("%f %f %f\n", tmp->x, tmp->y, tmp->z);
+		tmp = tmp->next;
+	}
+
 }
 
 //static void check_data(int fd, t_size *data_size)
@@ -265,7 +300,10 @@ bool    parse_file(char *file_name, t_env *e)
     if ((fd = open(file_name, O_RDONLY)) < 0) {
         return (false);
 	}
+	e->vec_list = NULL;
+
 	new_parser(fd, e);
+
     //check_data(fd, &e->data_size);
 	//malloc_data(&e->data_size, &e->mesh);
 	

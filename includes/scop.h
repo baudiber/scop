@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/07 19:09:05 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/09 16:19:52 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,14 @@ typedef struct s_env    t_env;
 typedef struct s_size   t_size;
 typedef struct s_mesh 	t_mesh;
 typedef struct s_vertex t_vertex;
+typedef struct s_vec_list t_vec_list;
+
+struct s_vec_list {
+	float 		x;
+	float 		y;
+	float 		z;
+	t_vec_list 	*next;
+};
 
 struct s_vertex {
 	t_vec3 	pos;
@@ -56,9 +64,10 @@ struct s_mesh
 
 struct s_env
 {
-	GLFWwindow* 	window;
+	GLFWwindow 		*window;
 	t_mesh 			mesh;
 	t_size 			data_size;
+	t_vec_list 		*vec_list;
 	int 			shading;
 };
 
