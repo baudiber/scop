@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/09 16:19:52 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/10 16:57:25 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,20 @@ typedef struct s_size   t_size;
 typedef struct s_mesh 	t_mesh;
 typedef struct s_vertex t_vertex;
 typedef struct s_vec_list t_vec_list;
+typedef struct s_face_list t_face_list;
 
 struct s_vec_list {
 	float 		x;
 	float 		y;
 	float 		z;
 	t_vec_list 	*next;
+};
+
+struct s_face_list {
+	int 			indices[4];
+	int 			tex_cords[4];
+	unsigned int 	nb;
+	t_face_list 	*next;
 };
 
 struct s_vertex {
@@ -68,6 +76,7 @@ struct s_env
 	t_mesh 			mesh;
 	t_size 			data_size;
 	t_vec_list 		*vec_list;
+	t_face_list 	*face_list;
 	int 			shading;
 };
 

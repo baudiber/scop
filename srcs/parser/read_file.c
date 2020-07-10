@@ -21,49 +21,95 @@ t_vec_list 	*parse_vec_line(const char *line)
 		exit (-1);
 	}
 
-	if ((sscanf(line, "%*s %f %f %f", &new->x, &new->y, &new->z)) != 3)
+	if ((sscanf(line, "v %f %f %f", &new->x, &new->y, &new->z)) != 3)
 		printf("sscanfn error\n");
+	new->next = NULL;
+	return (new);
+}
+
+t_face_list 	*parse_face_line(const char *line)
+{
+	t_face_list *new;
+
+	new = (t_face_list *)malloc(sizeof(t_face_list));	
+	if (!new)
+	{
+		printf("malloc error\n");
+		exit (-1);
+	}
+
+	int i_nb;
+
+	i_nb = sscanf(line, "f %d/%d %d/%d %d/%d %d/%d", &new->indices[0], &new->tex_cords[0], &new->indices[1], &new->tex_cords[1], &new->indices[2], &new->tex_cords[2], &new->indices[3], &new->tex_cords[3]);
+	if (i_nb < 6)
+	{
+		i_nb = sscanf(line, "f %d %d %d %d", &new->indices[0], &new->indices[1], &new->indices[2], &new->indices[3]);
+		printf("parsing error: weird number of indices\n");
+		exit(-1);
+	}
+	new->nb = i_nb;
+	printf("inb: %d\n", i_nb);
+
+	for (int i = 0; i < i_nb / 2; i++)
+	{
+		printf("%d/", new->indices[i]);
+		printf("%d  ", new->tex_cords[i]);
+	}
+	printf("\n");
+
+
 	new->next = NULL;
 	return (new);
 }
 
 static void new_parser(int fd, t_env *e)
 {
-	t_vec_list *tmp;
+	t_vec_list  *it1 = NULL;
+	t_face_list *it2 = NULL;
     int     rd;
     char    *line;
 
-	tmp = e->vec_list;
+	e->vec_list = (t_vec_list *)malloc(sizeof(t_vec_list));	
+	if (!e->vec_list)
+	{
+		printf("malloc error\n");
+		exit (-1);
+	}
+	e->face_list = (t_face_list *)malloc(sizeof(t_face_list));	
+	if (!e->face_list)
+	{
+		printf("malloc error\n");
+		exit (-1);
+	}
+	it1 = e->vec_list;
+	it2 = e->face_list;
+
+
     while ((rd = get_next_line(fd, &line)) > 0)
 	{
         if (line && !ft_strncmp(line, "v ", 2))
 		{
-			printf("OK\n");
-			tmp = parse_vec_line(line);
-//			printf("%f %f %f\n", tmp->x, tmp->y, tmp->z);
-			if (!e->vec_list)
-			{
-				e->vec_list = tmp;
-			}
-			tmp = tmp->next;
-			//printf("%s\n", line);
+			it1->next = parse_vec_line(line);
+			it1 = it1->next;
 		}
 		else if (line && !ft_strncmp(line, "f ", 2))
 		{
+			it2->next = parse_face_line(line);
+			it2 = it2->next;
 			//printf("%s\n", line);
 		}
         (line) ? ft_strdel(&line) : 0;
 	}
     (line) ? ft_strdel(&line) : 0;
 
-	tmp = e->vec_list;
+	it1 = e->vec_list;
+	it1 = it1->next;
 
-	while(tmp) 
+	while(it1) 
 	{
-		printf("%f %f %f\n", tmp->x, tmp->y, tmp->z);
-		tmp = tmp->next;
+		printf("%f %f %f\n", it1->x, it1->y, it1->z);
+		it1 = it1->next;
 	}
-
 }
 
 //static void check_data(int fd, t_size *data_size)
