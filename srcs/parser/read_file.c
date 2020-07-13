@@ -10,6 +10,65 @@
 // s on/off
 // f  for faces   followed by vectex by index (starting at 1)
 
+void 		malloc_verts(t_env *e)
+{
+	t_vec_list 		*vec_it;
+	int 			vec_nb;
+
+	vec_it = e->vec_list->next;
+	vec_nb = 0;
+
+	while (vec_it)
+	{
+		vec_nb++;
+		vec_it = vec_it->next;
+	}
+	e->data_size.vec_nb = vec_nb;
+	if (!(e->mesh.verts = (t_vec3 *)malloc(sizeof(t_vec3) * vec_nb)))
+	{
+		printf("malloc error");
+		exit(-1);
+	}
+}
+
+void 		malloc_indices(t_env *e)
+{
+	t_face_list 	*face_it;
+	int 			indice_nb;
+
+	face_it = e->face_list->next;
+	indice_nb = 0;
+
+	while (face_it)
+	{
+		indice_nb++;
+		face_it = face_it->next;
+	}
+	e->data_size.indice_nb = indice_nb;
+	if (!(e->mesh.indices = (unsigned int *)malloc(sizeof(unsigned int) * indice_nb)))
+	{
+		printf("malloc error");
+		exit(-1);
+	}
+}
+
+void 		process_data(t_env *e)
+{
+	t_vec_list 		*vec_it;
+	t_face_list 	*face_it;
+	int 			vec_nb;
+	int 			face_nb;
+
+	vec_nb = ft_lstlen(e->vec_list);
+	vec_it = e->vec_list->next;
+	face_it = e->face_list->next;
+
+	while (vec_it)
+	{
+
+	}
+}
+
 t_vec_list 	*parse_vec_line(const char *line)
 {
 	t_vec_list *new;
@@ -27,9 +86,10 @@ t_vec_list 	*parse_vec_line(const char *line)
 	return (new);
 }
 
-t_face_list 	*parse_face_line(const char *line)
+t_face_list 	*parse_face_line_textured(const char *line)
 {
 	t_face_list *new;
+	int i_nb;
 
 	new = (t_face_list *)malloc(sizeof(t_face_list));	
 	if (!new)
@@ -37,26 +97,52 @@ t_face_list 	*parse_face_line(const char *line)
 		printf("malloc error\n");
 		exit (-1);
 	}
-
-	int i_nb;
-
 	i_nb = sscanf(line, "f %d/%d %d/%d %d/%d %d/%d", &new->indices[0], &new->tex_cords[0], &new->indices[1], &new->tex_cords[1], &new->indices[2], &new->tex_cords[2], &new->indices[3], &new->tex_cords[3]);
-	if (i_nb < 6)
+	if (i_nb != 6 && i_nb != 8)
 	{
-		i_nb = sscanf(line, "f %d %d %d %d", &new->indices[0], &new->indices[1], &new->indices[2], &new->indices[3]);
+		printf("parsing error: weird number of indices\n");
+		exit(-1);
+	}
+	//printf("inb: %d\n", i_nb);
+
+	//for (int i = 0; i < i_nb * 0.5; i++)
+	//{
+	//	printf("%d/", new->indices[i]);
+	//	printf("%d  ", new->tex_cords[i]);
+	//}
+	//printf("\n");
+
+	new->nb = i_nb * 0.5;
+	new->next = NULL;
+	return (new);
+}
+
+t_face_list 	*parse_face_line(const char *line)
+{
+	t_face_list *new;
+	int 		i_nb;
+
+	new = (t_face_list *)malloc(sizeof(t_face_list));	
+	if (!new)
+	{
+		printf("malloc error\n");
+		exit (-1);
+	}
+	i_nb = sscanf(line, "f %d %d %d %d", &new->indices[0], &new->indices[1], &new->indices[2], &new->indices[3]);
+	if (i_nb < 3)
+	{
 		printf("parsing error: weird number of indices\n");
 		exit(-1);
 	}
 	new->nb = i_nb;
-	printf("inb: %d\n", i_nb);
+	
+	//printf("inb: %d\n", i_nb);
 
-	for (int i = 0; i < i_nb / 2; i++)
-	{
-		printf("%d/", new->indices[i]);
-		printf("%d  ", new->tex_cords[i]);
-	}
-	printf("\n");
-
+	//for (int i = 0; i < i_nb; i++)
+	//{
+	//	printf("%d ", new->indices[i]);
+	//}
+	//printf("\n");
 
 	new->next = NULL;
 	return (new);
@@ -94,7 +180,13 @@ static void new_parser(int fd, t_env *e)
 		}
 		else if (line && !ft_strncmp(line, "f ", 2))
 		{
-			it2->next = parse_face_line(line);
+			if ((ft_strchr_sec(line, '/')))
+			{
+				e->mesh.textured = true;
+				it2->next = parse_face_line_textured(line);
+			}
+			else 
+				it2->next = parse_face_line(line);
 			it2 = it2->next;
 			//printf("%s\n", line);
 		}
@@ -102,14 +194,14 @@ static void new_parser(int fd, t_env *e)
 	}
     (line) ? ft_strdel(&line) : 0;
 
-	it1 = e->vec_list;
-	it1 = it1->next;
+	//it1 = e->vec_list;
+	//it1 = it1->next;
 
-	while(it1) 
-	{
-		printf("%f %f %f\n", it1->x, it1->y, it1->z);
-		it1 = it1->next;
-	}
+	//while(it1) 
+	//{
+	//	printf("%f %f %f\n", it1->x, it1->y, it1->z);
+	//	it1 = it1->next;
+	//}
 }
 
 //static void check_data(int fd, t_size *data_size)
@@ -349,6 +441,7 @@ bool    parse_file(char *file_name, t_env *e)
 	e->vec_list = NULL;
 
 	new_parser(fd, e);
+	process_data(e);
 
     //check_data(fd, &e->data_size);
 	//malloc_data(&e->data_size, &e->mesh);

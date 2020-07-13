@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/10 16:57:25 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/10 20:33:41 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,27 +47,22 @@ struct s_face_list {
 	t_face_list 	*next;
 };
 
-struct s_vertex {
-	t_vec3 	pos;
-	t_vec2  tex;
-};
-
 struct s_size
 {
-	unsigned int 	v_nb;
-	unsigned int 	f_nb;
-	unsigned int 	indices;
-	unsigned int 	points;
+	unsigned int 	vec_nb;
+	unsigned int 	indice_nb;
+	unsigned int 	text_coord_nb;
+	unsigned int 	point_nb;
 	t_vec3 			max;
 	t_vec3 			min;
 };
 
 struct s_mesh
 {
-	t_vertex 		*vertices;
-	int				**faces;
-	float 			*verts;
+	t_vec3 			*verts;
 	unsigned int 	*indices;
+	unsigned int 	*text_coords;
+	bool 			textured;
 };
 
 struct s_env
@@ -82,6 +77,7 @@ struct s_env
 
 bool    parse_file(char *file_name, t_env *e);
 bool    init(t_env *e);
+t_env					*get_env(void);
 
 void    run(t_env *e);
 
