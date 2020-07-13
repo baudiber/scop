@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/10 20:33:41 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/07/13 18:36:40 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,36 +30,47 @@ typedef struct s_env    t_env;
 typedef struct s_size   t_size;
 typedef struct s_mesh 	t_mesh;
 typedef struct s_vertex t_vertex;
-typedef struct s_vec_list t_vec_list;
-typedef struct s_face_list t_face_list;
+typedef struct s_v_lst t_v_lst;
+typedef struct s_f_lst t_f_lst;
+typedef struct s_vt_lst t_vt_lst;
 
-struct s_vec_list {
-	float 		x;
-	float 		y;
-	float 		z;
-	t_vec_list 	*next;
+struct s_v_lst {
+	t_vec3 		pos;
+	t_v_lst 	*next;
 };
 
-struct s_face_list {
+struct s_f_lst {
 	int 			indices[4];
 	int 			tex_cords[4];
 	unsigned int 	nb;
-	t_face_list 	*next;
+	t_f_lst 		*next;
+};
+
+struct s_vt_lst {
+	float 			u;
+	float 			v;
+	t_vt_lst 		*next;
 };
 
 struct s_size
 {
-	unsigned int 	vec_nb;
+	unsigned int 	v_nb;
+	unsigned int 	vt_nb;
 	unsigned int 	indice_nb;
-	unsigned int 	text_coord_nb;
 	unsigned int 	point_nb;
 	t_vec3 			max;
 	t_vec3 			min;
 };
 
+struct s_vertex
+{
+	t_vec3 		pos;
+	t_vec2 		text_coords;
+};
+
 struct s_mesh
 {
-	t_vec3 			*verts;
+	t_vertex 		*verts;
 	unsigned int 	*indices;
 	unsigned int 	*text_coords;
 	bool 			textured;
@@ -70,8 +81,9 @@ struct s_env
 	GLFWwindow 		*window;
 	t_mesh 			mesh;
 	t_size 			data_size;
-	t_vec_list 		*vec_list;
-	t_face_list 	*face_list;
+	t_v_lst 		*v_lst;
+	t_vt_lst 		*vt_lst;
+	t_f_lst 		*f_lst;
 	int 			shading;
 };
 
