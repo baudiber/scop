@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/13 17:37:19 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/15 00:30:49 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ void run(t_env *e)
 	glBindVertexArray(model_VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(t_vertex) * e->data_size.vec_nb , &e->mesh.verts[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(t_vertex) * e->data_size.v_nb , &e->mesh.verts[0], GL_STATIC_DRAW);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * e->data_size.indice_nb , &e->mesh.indices[0], GL_STATIC_DRAW);
@@ -179,7 +179,7 @@ void run(t_env *e)
 //	glBindVertexArray(light_VAO);
 //	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
- 	t_mat4x4 	model;
+//	t_mat4x4 	model;
  	t_mat4x4 	view;
  	t_mat4x4 	projection;
 

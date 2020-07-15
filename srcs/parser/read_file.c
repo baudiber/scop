@@ -38,7 +38,7 @@ void 		free_lists(t_env *e)
 
 void 		malloc_buffers(t_env *e)
 {
-	if (!(e->mesh.verts = (t_vertex *)malloc(sizeof(t_vertex) * e->data_size.vec_nb)))
+	if (!(e->mesh.verts = (t_vertex *)malloc(sizeof(t_vertex) * e->data_size.v_nb)))
 	{
 		printf("malloc error");
 		exit(-1);
@@ -85,21 +85,75 @@ void 		process_fdata(t_env *e)
 	}
 }
 
+bool float_cmp(float float1, float float2)
+{
+	return (fabsf(float1 - float2) < FLT_EPSILON);
+}
+
+bool 	vert_already_exists(t_vertex vert, t_env *e)
+{
+	t_vert_lst *vert_it;
+
+	vert_it = e->vert_lst->next;
+	while (vert_it)
+	{
+		if (float_cmp(vert_it->v.pos.x, vert.pos.x) && 
+			float_cmp(vert_it->v.pos.y, vert.pos.y) && 
+			float_cmp(vert_it->v.pos.z, vert.pos.z) && 
+			float_cmp(vert_it->v.text_coords.x, vert.text_coords.x) && 
+			float_cmp(vert_it->v.text_coords.y, vert.text_coords.y))
+			return (true);
+		vert_it = vert_it->next;
+	}
+	return (false);
+}
+
+t_vert_lst 	*add_vert_node(t_vertex vert)
+{
+	t_vert_lst *new;
+
+	new = (t_vert_lst *)malloc(sizeof(t_vert_lst));	
+	if (!new)
+	{
+		printf("malloc error\n");
+		exit (-1);
+	}
+	new->v = vert;
+	new->next = NULL;
+	return (new);
+}
+
 void 	process_data(t_env *e)
 {
-	t_vertex out_verts[e->data_size.v_nb];
-	int  ov_i;
-	
-	ov_i = 0;
+	e->vert_lst = (t_vert_lst *)malloc(sizeof(t_vert_lst));	
+	if (!e->vert_lst)
+	{
+		printf("malloc error\n");
+		exit (-1);
+	}
+
+	t_vert_lst *vert_it;
+
+	vert_it = e->vert_lst;
+
+	t_vertex tmp_vert;
+
 	for (unsigned int i = 0; i < e->data_size.indice_nb; i++)
 	{
-		out_verts[ov_i].pos = e->mesh.verts[e->mesh.indices[i]].pos;
-		out_verts[ov_i].text_coords.x = e->mesh.
+		tmp_vert.pos = e->mesh.verts[e->mesh.indices[i]].pos;
+		tmp_vert.text_coords = e->mesh.verts[e->mesh.text_coords[i]].text_coords;
+		if (!vert_already_exists(tmp_vert, e))
+		{
+			vert_it->next = add_vert_node(tmp_vert);
+			vert_it = vert_it->next;
+		}
+		else 
+			printf("vert already exists!\n");
 	}
 
 }
 
-void 		process_vdata(t_env *e)
+void 		process_vtdata(t_env *e)
 {
 	t_vt_lst 		*vt_it;
 	int 			i;
@@ -108,8 +162,8 @@ void 		process_vdata(t_env *e)
 	i = 0;
 	while (vt_it)
 	{
-		e->mesh.verts[i].text_coords[0] = vt_it->u;
-		e->mesh.verts[i].text_coords[1] = vt_it->v;
+		e->mesh.verts[i].text_coords.x = vt_it->u;
+		e->mesh.verts[i].text_coords.y = vt_it->v;
 		vt_it = vt_it->next;
 		i++;
 	}
@@ -141,7 +195,10 @@ t_vt_lst 	*parse_vt_line(const char *line)
 		exit (-1);
 	}
 	if ((sscanf(line, "vt %f %f", &new->u, &new->v)) != 2)
+	{
 		printf("sscanfn error\n");
+		exit(-1);
+	}
 	new->next = NULL;
 	return (new);
 }
@@ -157,7 +214,10 @@ t_v_lst 	*parse_vec_line(const char *line)
 		exit (-1);
 	}
 	if ((sscanf(line, "v %f %f %f", &new->pos.x, &new->pos.y, &new->pos.z)) != 3)
+	{
 		printf("sscanfn error\n");
+		exit(-1);
+	}
 	new->next = NULL;
 	return (new);
 }
@@ -323,10 +383,10 @@ bool    parse_file(char *file_name, t_env *e)
 	}
 	new_parser(fd, e);
 	malloc_buffers(e);
+	process_vdata(e);
+	process_vtdata(e);
+	process_fdata(e);
 	process_data(e);
-	//process_vdata(e);
-	//process_data(e);
-	//process_fdata(e);
 	free_lists(e);
 
 	get_min_max(e);

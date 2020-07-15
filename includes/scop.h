@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/13 18:36:40 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/15 00:30:44 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <stdbool.h>
 # include <fcntl.h>
 # include <math.h>
+# include <float.h>
 
 #include <stdio.h>
 
@@ -33,6 +34,8 @@ typedef struct s_vertex t_vertex;
 typedef struct s_v_lst t_v_lst;
 typedef struct s_f_lst t_f_lst;
 typedef struct s_vt_lst t_vt_lst;
+typedef struct s_vert_lst t_vert_lst;
+
 
 struct s_v_lst {
 	t_vec3 		pos;
@@ -68,11 +71,15 @@ struct s_vertex
 	t_vec2 		text_coords;
 };
 
+struct s_vert_lst {
+	t_vertex  	v;
+	t_vert_lst 	*next;
+};
+
 struct s_mesh
 {
 	t_vertex 		*verts;
 	unsigned int 	*indices;
-	unsigned int 	*text_coords;
 	bool 			textured;
 };
 
@@ -84,6 +91,7 @@ struct s_env
 	t_v_lst 		*v_lst;
 	t_vt_lst 		*vt_lst;
 	t_f_lst 		*f_lst;
+	t_vert_lst 		*vert_lst;
 	int 			shading;
 };
 
