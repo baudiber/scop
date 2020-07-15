@@ -10,177 +10,25 @@
 // s on/off
 // f  for faces   followed by vectex by index (starting at 1)
 
-void 		free_lists(t_env *e)
-{
-	t_f_lst 	*f_it;
-	t_v_lst 	*v_it;
-	t_vt_lst 	*vt_it;
-
-	v_it = e->v_lst->next;
-	f_it = e->f_lst;
-	vt_it = e->vt_lst;
-	while (f_it)
-	{
-		free(f_it);
-		f_it = f_it->next;
-	}
-	while (v_it)
-	{
-		free(v_it);
-		v_it = v_it->next;
-	}
-	while (vt_it)
-	{
-		free(vt_it);
-		vt_it = vt_it->next;
-	}
-}
-
 void 		malloc_buffers(t_env *e)
 {
-	if (!(e->mesh.verts = (t_vertex *)malloc(sizeof(t_vertex) * e->data_size.v_nb)))
+	if (!(e->data.v = (t_vec3 *)malloc(sizeof(t_vec3) * e->data_size.v_nb)))
 	{
 		printf("malloc error");
 		exit(-1);
 	}
-	if (!(e->mesh.indices = (unsigned int *)malloc(sizeof(unsigned int) * e->data_size.indice_nb)))
+	if (!(e->data.indices = (t_vec2_int *)malloc(sizeof(t_vec2_int) * e->data_size.indice_nb)))
 	{
 		printf("malloc error");
 		exit(-1);
 	}
 	if (e->mesh.textured)
 	{
-		if (!(e->mesh.text_coords = (unsigned int *)malloc(sizeof(unsigned int) * e->data_size.indice_nb)))
+		if (!(e->data.vt = (t_vec2 *)malloc(sizeof(t_vec2) * e->data_size.vt_nb)))
 		{
 			printf("malloc error");
 			exit(-1);
 		}
-	}
-}
-
-void 		process_fdata(t_env *e)
-{
-	t_f_lst 	*f_it;
-	int 			i;
-
-	f_it = e->f_lst->next;
-	i = 0;
-	while (f_it)
-	{
-		e->mesh.indices[i] = f_it->indices[0];
-		e->mesh.indices[i + 1] = f_it->indices[1];
-		e->mesh.indices[i + 2] = f_it->indices[2];
-		if (f_it->nb == 4)
-			e->mesh.indices[i + 3] = f_it->indices[3];
-		if (e->mesh.textured)
-		{
-			e->mesh.text_coords[i] = f_it->tex_cords[0];
-			e->mesh.text_coords[i + 1] = f_it->tex_cords[1];
-			e->mesh.text_coords[i + 2] = f_it->tex_cords[2];
-			if (f_it->nb == 4)
-				e->mesh.text_coords[i + 3] = f_it->tex_cords[3];
-		}
-		i += f_it->nb;
-		f_it = f_it->next;
-	}
-}
-
-bool float_cmp(float float1, float float2)
-{
-	return (fabsf(float1 - float2) < FLT_EPSILON);
-}
-
-bool 	vert_already_exists(t_vertex vert, t_env *e)
-{
-	t_vert_lst *vert_it;
-
-	vert_it = e->vert_lst->next;
-	while (vert_it)
-	{
-		if (float_cmp(vert_it->v.pos.x, vert.pos.x) && 
-			float_cmp(vert_it->v.pos.y, vert.pos.y) && 
-			float_cmp(vert_it->v.pos.z, vert.pos.z) && 
-			float_cmp(vert_it->v.text_coords.x, vert.text_coords.x) && 
-			float_cmp(vert_it->v.text_coords.y, vert.text_coords.y))
-			return (true);
-		vert_it = vert_it->next;
-	}
-	return (false);
-}
-
-t_vert_lst 	*add_vert_node(t_vertex vert)
-{
-	t_vert_lst *new;
-
-	new = (t_vert_lst *)malloc(sizeof(t_vert_lst));	
-	if (!new)
-	{
-		printf("malloc error\n");
-		exit (-1);
-	}
-	new->v = vert;
-	new->next = NULL;
-	return (new);
-}
-
-void 	process_data(t_env *e)
-{
-	e->vert_lst = (t_vert_lst *)malloc(sizeof(t_vert_lst));	
-	if (!e->vert_lst)
-	{
-		printf("malloc error\n");
-		exit (-1);
-	}
-
-	t_vert_lst *vert_it;
-
-	vert_it = e->vert_lst;
-
-	t_vertex tmp_vert;
-
-	for (unsigned int i = 0; i < e->data_size.indice_nb; i++)
-	{
-		tmp_vert.pos = e->mesh.verts[e->mesh.indices[i]].pos;
-		tmp_vert.text_coords = e->mesh.verts[e->mesh.text_coords[i]].text_coords;
-		if (!vert_already_exists(tmp_vert, e))
-		{
-			vert_it->next = add_vert_node(tmp_vert);
-			vert_it = vert_it->next;
-		}
-		else 
-			printf("vert already exists!\n");
-	}
-
-}
-
-void 		process_vtdata(t_env *e)
-{
-	t_vt_lst 		*vt_it;
-	int 			i;
-
-	vt_it = e->vt_lst->next;
-	i = 0;
-	while (vt_it)
-	{
-		e->mesh.verts[i].text_coords.x = vt_it->u;
-		e->mesh.verts[i].text_coords.y = vt_it->v;
-		vt_it = vt_it->next;
-		i++;
-	}
-}
-
-void 		process_vdata(t_env *e)
-{
-	t_v_lst 		*v_it;
-	int 			i;
-
-	v_it = e->v_lst->next;
-	i = 0;
-	while (v_it)
-	{
-		e->mesh.verts[i].pos = v_it->pos;
-		v_it = v_it->next;
-		i++;
 	}
 }
 
@@ -194,7 +42,7 @@ t_vt_lst 	*parse_vt_line(const char *line)
 		printf("malloc error\n");
 		exit (-1);
 	}
-	if ((sscanf(line, "vt %f %f", &new->u, &new->v)) != 2)
+	if ((sscanf(line, "vt %f %f", &new->uv.x, &new->uv.y)) != 2)
 	{
 		printf("sscanfn error\n");
 		exit(-1);
@@ -203,7 +51,7 @@ t_vt_lst 	*parse_vt_line(const char *line)
 	return (new);
 }
 
-t_v_lst 	*parse_vec_line(const char *line)
+t_v_lst 	*parse_v_line(const char *line)
 {
 	t_v_lst *new;
 
@@ -311,7 +159,7 @@ static void new_parser(int fd, t_env *e)
         if (line && !ft_strncmp(line, "v ", 2))
 		{
 			v_nb++;
-			v_it->next = parse_vec_line(line);
+			v_it->next = parse_v_line(line);
 			v_it = v_it->next;
 		}
 		else if (line && !ft_strncmp(line, "vt ", 3))
@@ -332,44 +180,15 @@ static void new_parser(int fd, t_env *e)
 				f_it->next = parse_face_line(line);
 			f_it = f_it->next;
 			i_nb += f_it->nb;
-			//printf("%s\n", line);
 		}
         (line) ? ft_strdel(&line) : 0;
 	}
     (line) ? ft_strdel(&line) : 0;
 
+	e->data_size.indice_nb = i_nb;
 	e->data_size.v_nb = v_nb;
 	e->data_size.vt_nb = vt_nb;
-	e->data_size.indice_nb = i_nb;
-}
-
-void 	get_min_max(t_env *e)
-{
-	unsigned int i;
-
-	i = 0;
-	e->data_size.min.x = e->mesh.verts[i].pos.x;
-	e->data_size.max.x = e->mesh.verts[i].pos.x;
-	e->data_size.min.y = e->mesh.verts[i].pos.y;
-	e->data_size.max.y = e->mesh.verts[i].pos.y;
-	e->data_size.min.z = e->mesh.verts[i].pos.z;
-	e->data_size.max.z = e->mesh.verts[i].pos.z;
-	while (i < e->data_size.v_nb)
-	{
-		if (e->mesh.verts[i].pos.x < e->data_size.min.x)
-			e->data_size.min.x = e->mesh.verts[i].pos.x;
-		else if (e->mesh.verts[i].pos.x > e->data_size.max.x)
-			e->data_size.max.x = e->mesh.verts[i].pos.x;
-		if (e->mesh.verts[i].pos.y < e->data_size.min.y)
-			e->data_size.min.y = e->mesh.verts[i].pos.y;
-		else if (e->mesh.verts[i].pos.y > e->data_size.max.y)
-			e->data_size.max.y = e->mesh.verts[i].pos.y;
-		if (e->mesh.verts[i].pos.z < e->data_size.min.z)
-			e->data_size.min.z = e->mesh.verts[i].pos.z;
-		else if (e->mesh.verts[i].pos.z > e->data_size.max.z)
-			e->data_size.max.z = e->mesh.verts[i].pos.z;
-		i++;
-	}
+	e->data_size.vt_nb = vt_nb;
 }
 
 bool    parse_file(char *file_name, t_env *e)
@@ -383,13 +202,6 @@ bool    parse_file(char *file_name, t_env *e)
 	}
 	new_parser(fd, e);
 	malloc_buffers(e);
-	process_vdata(e);
-	process_vtdata(e);
-	process_fdata(e);
-	process_data(e);
-	free_lists(e);
-
-	get_min_max(e);
-
+	printf("textured: %d vnb: %d vtnb: %d indexnb: %d\n", e->mesh.textured, e->data_size.v_nb, e->data_size.vt_nb, e->data_size.indice_nb);
     return (true);
 }

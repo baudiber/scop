@@ -6,7 +6,7 @@
 #    By: baudiber <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/13 12:30:36 by baudiber          #+#    #+#              #
-#    Updated: 2020/06/22 18:11:42 by baudiber         ###   ########.fr        #
+#    Updated: 2020/07/15 16:21:35 by baudiber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,8 @@ SRC			=	main.c							\
 				engine/run.c					\
 				inputs/process_inputs.c 		\
 				parser/read_file.c 				\
+				parser/process_data.c 			\
+				parser/parsing.c 				\
 				engine/matrix_ops.c
 
 R			=	\033[31m

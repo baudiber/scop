@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/15 00:30:44 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/07/15 18:33:26 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_v_lst t_v_lst;
 typedef struct s_f_lst t_f_lst;
 typedef struct s_vt_lst t_vt_lst;
 typedef struct s_vert_lst t_vert_lst;
+typedef struct s_raw_data t_raw_data;
 
 
 struct s_v_lst {
@@ -50,8 +51,7 @@ struct s_f_lst {
 };
 
 struct s_vt_lst {
-	float 			u;
-	float 			v;
+	t_vec2 			uv;
 	t_vt_lst 		*next;
 };
 
@@ -61,6 +61,7 @@ struct s_size
 	unsigned int 	vt_nb;
 	unsigned int 	indice_nb;
 	unsigned int 	point_nb;
+	unsigned int 	vert_nb;
 	t_vec3 			max;
 	t_vec3 			min;
 };
@@ -69,6 +70,7 @@ struct s_vertex
 {
 	t_vec3 		pos;
 	t_vec2 		text_coords;
+	unsigned int index;
 };
 
 struct s_vert_lst {
@@ -79,8 +81,15 @@ struct s_vert_lst {
 struct s_mesh
 {
 	t_vertex 		*verts;
-	unsigned int 	*indices;
+	unsigned int 	*index_buffer;
 	bool 			textured;
+};
+
+struct s_raw_data
+{
+	t_vec3 			*v;
+	t_vec2 			*vt;
+	t_vec2_int 		*indices;
 };
 
 struct s_env
@@ -88,6 +97,7 @@ struct s_env
 	GLFWwindow 		*window;
 	t_mesh 			mesh;
 	t_size 			data_size;
+	t_raw_data 		data;
 	t_v_lst 		*v_lst;
 	t_vt_lst 		*vt_lst;
 	t_f_lst 		*f_lst;
@@ -95,6 +105,8 @@ struct s_env
 	int 			shading;
 };
 
+void 	parse_obj(char *file_path, t_env *e);
+void 	process_data(t_env *e);
 bool    parse_file(char *file_name, t_env *e);
 bool    init(t_env *e);
 t_env					*get_env(void);

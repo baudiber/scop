@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/15 00:30:49 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/07/15 19:09:07 by baudiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ void run(t_env *e)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(t_vertex) * e->data_size.v_nb , &e->mesh.verts[0], GL_STATIC_DRAW);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * e->data_size.indice_nb , &e->mesh.indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * e->data_size.indice_nb , &e->mesh.index_buffer[0], GL_STATIC_DRAW);
 
 	// position attribute
     glEnableVertexAttribArray(0);
@@ -179,7 +179,7 @@ void run(t_env *e)
 //	glBindVertexArray(light_VAO);
 //	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-//	t_mat4x4 	model;
+	t_mat4x4 	model;
  	t_mat4x4 	view;
  	t_mat4x4 	projection;
 
@@ -194,26 +194,26 @@ void run(t_env *e)
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-//		t_mat4x4    scale;
-//		model = identity_mat4x4();
-//		scale = identity_mat4x4();
-//		scale = scale_4x4mat(scale, vec3(0.4f, 0.4f, 0.4f));
-//		model = mult_4x4mat(scale, model);
-//		model = translate_mat4x4(model, vec3(-(e->data_size.max.x + e->data_size.min.x) / 2.0f, -(e->data_size.max.y + e->data_size.min.y) / 2.0f, -(e->data_size.max.z + e->data_size.min.z) / 2.0f));
-//		model = rotation_mat4x4(model, (float)glfwGetTime() * deg_to_rad(45.0f), vec3(0.0f, 1.0f, 0.0f));
-//		int shadingLoc = glGetUniformLocation(shader_program, "shading");
-//		int modelLoc = glGetUniformLocation(shader_program, "model");
-//		int viewloc = glGetUniformLocation(shader_program, "view");
-//		int projLoc = glGetUniformLocation(shader_program, "projection");
-//		glUniform1i(shadingLoc, e->shading);
-//		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &model.m[0][0]);
-//		glUniformMatrix4fv(viewloc, 1, GL_FALSE, &view.m[0][0]);
-//		glUniformMatrix4fv(projLoc, 1, GL_FALSE, &projection.m[0][0]);
-//
-//		glUseProgram(shader_program);
-//		glBindVertexArray(model_VAO);
-//		glDrawElements(GL_TRIANGLES, e->data_size.indices , GL_UNSIGNED_INT, 0);
-//
+		t_mat4x4    scale;
+		model = identity_mat4x4();
+		scale = identity_mat4x4();
+		scale = scale_4x4mat(scale, vec3(0.4f, 0.4f, 0.4f));
+		model = mult_4x4mat(scale, model);
+		model = translate_mat4x4(model, vec3(-(e->data_size.max.x + e->data_size.min.x) / 2.0f, -(e->data_size.max.y + e->data_size.min.y) / 2.0f, -(e->data_size.max.z + e->data_size.min.z) / 2.0f));
+		model = rotation_mat4x4(model, (float)glfwGetTime() * deg_to_rad(45.0f), vec3(0.0f, 1.0f, 0.0f));
+		int shadingLoc = glGetUniformLocation(shader_program, "shading");
+		int modelLoc = glGetUniformLocation(shader_program, "model");
+		int viewloc = glGetUniformLocation(shader_program, "view");
+		int projLoc = glGetUniformLocation(shader_program, "projection");
+		glUniform1i(shadingLoc, e->shading);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &model.m[0][0]);
+		glUniformMatrix4fv(viewloc, 1, GL_FALSE, &view.m[0][0]);
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, &projection.m[0][0]);
+
+		glUseProgram(shader_program);
+		glBindVertexArray(model_VAO);
+		glDrawElements(GL_TRIANGLES, e->data_size.indice_nb , GL_UNSIGNED_INT, 0);
+
 		glfwSwapBuffers(e->window);
 		glfwPollEvents();
 	}
