@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/15 19:09:07 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/22 10:19:58 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ const char *vertexShaderSource = "#version 410 core\n"
 	"uniform mat4 view;\n"
 	"uniform mat4 projection;\n"
 
+	"out vec2 mytexCoord;\n"
 	"flat out vec4 color;\n"
 
     "void main()\n"
@@ -27,13 +28,16 @@ const char *vertexShaderSource = "#version 410 core\n"
     "   gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
 	" 	gl_PointSize = gl_Position.z * 0.5;\n"
 	" 	color = vec4( gl_Position.x * 0.4, gl_Position.y * 0.3 , gl_Position.z * 0.8  , 1.0);\n"
+	" 	mytexCoord = texCoord;\n"
     "}\0";
 
 const char *fragmentShaderSource = "#version 410 core\n"
 	"out vec4 FragColor;\n"
 
 	"flat in vec4 color;\n"
+	"in vec2 mytexCoord;\n"
 	"uniform int shading;\n"
+	"uniform sampler2D ourTexture;\n"
 //	"uniform vec3 lightColor;\n"
 
     "void main()\n"
@@ -44,7 +48,7 @@ const char *fragmentShaderSource = "#version 410 core\n"
 	"   }\n"
 	" 	else\n"
 	" 	{\n"
-    "   	FragColor = vec4(color.x, color.y, color.z, 0.5f);\n"
+    "   	FragColor = texture(ourTexture, mytexCoord);\n" 
 	" 	}\n"
     //"   FragColor = vec4(lightColor * objectColor, 1.0);\n"
     "}\n\0";
@@ -150,6 +154,17 @@ void run(t_env *e)
 
 //	printf("indicenb %d\n", e->data_size.indices);
 //	printf("pointnb %d\n", e->data_size.points);
+//	printf("pointnb %d\n", e->data_size.points);
+
+	for (unsigned int i = 0; i < e->data_size.indice_nb; i++)
+	{
+		printf("%f %f %f    %f %f\n", e->mesh.verts[e->mesh.index_buffer[i]].pos.x, e->mesh.verts[e->mesh.index_buffer[i]].pos.y, e->mesh.verts[e->mesh.index_buffer[i]].pos.z, e->mesh.verts[e->mesh.index_buffer[i]].text_coords.x, e->mesh.verts[e->mesh.index_buffer[i]].text_coords.y);
+	}
+	//for (unsigned int i = 0; i < e->data_size.indice_nb;i++)
+	//{
+		//printf("%d\n", e->mesh.index_buffer[i]);
+	//}
+
 
 	unsigned int VBO;
 	unsigned int model_VAO;
@@ -161,19 +176,42 @@ void run(t_env *e)
 	glBindVertexArray(model_VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(t_vertex) * e->data_size.v_nb , &e->mesh.verts[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(t_vertex) * e->data_size.vert_nb , &e->mesh.verts[0], GL_STATIC_DRAW);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * e->data_size.indice_nb , &e->mesh.index_buffer[0], GL_STATIC_DRAW);
 
 	// position attribute
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, sizeof(t_vertex), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (void*)0);
 
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, sizeof(t_vertex), (void*)sizeof(t_vec3));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (void*)sizeof(t_vec3));
 
 	glBindVertexArray(0);
+
+	unsigned int texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	int width, height;
+	unsigned char *data = parse_bmp_32bit("./textures/dirt.bmp", &width, &height, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else 
+	{
+		ft_putendl("error loading texture");
+		exit(0);
+	}
+	free(data);
+
 //	unsigned int light_VAO;
 //	glGenVertexArrays(1, &light_VAO);
 //	glBindVertexArray(light_VAO);
@@ -195,9 +233,9 @@ void run(t_env *e)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		t_mat4x4    scale;
-		model = identity_mat4x4();
 		scale = identity_mat4x4();
 		scale = scale_4x4mat(scale, vec3(0.4f, 0.4f, 0.4f));
+		model = identity_mat4x4();
 		model = mult_4x4mat(scale, model);
 		model = translate_mat4x4(model, vec3(-(e->data_size.max.x + e->data_size.min.x) / 2.0f, -(e->data_size.max.y + e->data_size.min.y) / 2.0f, -(e->data_size.max.z + e->data_size.min.z) / 2.0f));
 		model = rotation_mat4x4(model, (float)glfwGetTime() * deg_to_rad(45.0f), vec3(0.0f, 1.0f, 0.0f));

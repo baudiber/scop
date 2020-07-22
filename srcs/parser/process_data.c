@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 16:16:47 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/15 19:12:01 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/22 09:15:38 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,13 +108,13 @@ void 	create_vert_lst(t_env *e)
 	{
 		tmp_vert.pos = e->data.v[e->data.indices[i].x - 1];
 		tmp_vert.text_coords = e->data.vt[e->data.indices[i].y - 1];
-		if ((found_index = vert_already_exists(tmp_vert, e)) < 0)
+		if (vert_nb == 0 || (found_index = vert_already_exists(tmp_vert, e)) < 0)
 		{
 			vert_it->next = add_vert_node(tmp_vert);
-			vert_nb++;
 			vert_it = vert_it->next;
-			vert_it->v.index = vert_nb;
 			printf("node added!\n");
+			vert_it->v.index = vert_nb;
+			vert_nb++;
 		}
 		else
 			printf("vert already exists!\n");
@@ -126,29 +126,19 @@ void 	create_vert_lst(t_env *e)
 void 	create_index_buffer(t_env *e)
 {
 	t_vertex tmp_vert;
-	int unique_index_nb;
 	int found_index;
 	unsigned int i;
 
 	i = 0;
-	unique_index_nb = 0;
 	while (i < e->data_size.indice_nb)
 	{
 		tmp_vert.pos = e->data.v[e->data.indices[i].x - 1];
-		tmp_vert.text_coords = e->data.vt[e->data.indices[i].y - 1];
-		if ((found_index = vert_already_exists(tmp_vert, e)) < 0)
-		{
-			e->mesh.index_buffer[i] = unique_index_nb;
-		}
-		else
-		{
-			e->mesh.index_buffer[i] = found_index;
-			++unique_index_nb;
-		}
+		if (e->mesh.textured)
+			tmp_vert.text_coords = e->data.vt[e->data.indices[i].y - 1];
+		found_index = vert_already_exists(tmp_vert, e);
+		e->mesh.index_buffer[i] = found_index;
 		i++;
 	}
-	e->data_size.indice_nb = i + unique_index_nb;
-	printf("unique indicenb %d\n", unique_index_nb);
 	printf("final indicenb %d\n", e->data_size.indice_nb);
 }
 
@@ -161,7 +151,7 @@ void 	create_vert_data(t_env *e)
 	i = 0;
 	while (it)
 	{
-		e->mesh.verts[i] = it->v;
+		e->mesh.verts[i++] = it->v;
 		it = it->next;
 	}
 }
@@ -203,7 +193,7 @@ void 	malloc_vertices(t_env *e)
 		printf("verts malloc error");
 		exit(-1);
 	}
-	if (!(e->mesh.index_buffer = (unsigned int *)malloc(sizeof(unsigned int) * e->data_size.vert_nb)))
+	if (!(e->mesh.index_buffer = (unsigned int *)malloc(sizeof(unsigned int) * e->data_size.indice_nb)))
 	{
 		printf("index_buffer malloc error");
 		exit(-1);
@@ -220,5 +210,4 @@ void 	process_data(t_env *e)
 	create_vert_data(e);
 	create_index_buffer(e);
 	free_vert_lst(e);
-
 }

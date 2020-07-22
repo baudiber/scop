@@ -6,12 +6,14 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 14:54:07 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/18 16:28:39 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/21 11:51:29 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libgraph.h"
 #include "../includes/bmp.h"
+#include <stdio.h>
+#include <errno.h>
 
 bool			parse_headers(int fd, int *w, int *h)
 {
@@ -92,7 +94,10 @@ unsigned char	*parse_bmp_32bit(char *file_path, int *w, int *h, int alpha)
 	if ((fd = open(file_path, O_DIRECTORY)) >= 0)
 		return (NULL);
 	if ((fd = open(file_path, O_RDONLY)) < 0)
+	{
+    	fprintf( stderr, "errno is %d\n", errno );
 		return (NULL);
+	}
 	if (!parse_headers(fd, w, h))
 		return (NULL);
 	if (alpha)

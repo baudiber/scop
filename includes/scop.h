@@ -6,15 +6,15 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/15 18:33:26 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/21 14:40:07 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SCOP_H
 # define SCOP_H
 
-# define WIN_W 1920
-# define WIN_H 1080
+# define WIN_W 800
+# define WIN_H 600
 
 # include "../libft/libft.h"
 # include "../libgraph/includes/libgraph.h"
