@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/21 14:40:07 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/07/22 18:25:51 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,9 @@ struct s_env
 {
 	GLFWwindow 		*window;
 	t_mesh 			mesh;
+	float 			transition;
 	t_size 			data_size;
+	t_vec3 			camera;
 	t_raw_data 		data;
 	t_v_lst 		*v_lst;
 	t_vt_lst 		*vt_lst;

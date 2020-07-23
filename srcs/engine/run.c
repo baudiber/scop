@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/22 10:19:58 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/07/23 01:16:23 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,39 +20,45 @@ const char *vertexShaderSource = "#version 410 core\n"
 	"uniform mat4 view;\n"
 	"uniform mat4 projection;\n"
 
+	"flat out vec4 flat_color;\n"
+	"smooth out vec4 smooth_color;\n"
 	"out vec2 mytexCoord;\n"
-	"flat out vec4 color;\n"
 
     "void main()\n"
     "{\n"
     "   gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
 	" 	gl_PointSize = gl_Position.z * 0.5;\n"
-	" 	color = vec4( gl_Position.x * 0.4, gl_Position.y * 0.3 , gl_Position.z * 0.8  , 1.0);\n"
+	" 	flat_color = vec4( gl_Position.x * 0.4, gl_Position.y * 0.3 , gl_Position.z * 0.4  , 1.0);\n"
+	" 	smooth_color = flat_color;\n"
 	" 	mytexCoord = texCoord;\n"
     "}\0";
 
 const char *fragmentShaderSource = "#version 410 core\n"
 	"out vec4 FragColor;\n"
 
-	"flat in vec4 color;\n"
+	"flat in vec4 flat_color;\n"
+	"smooth in vec4 smooth_color;\n"
 	"in vec2 mytexCoord;\n"
+
 	"uniform int shading;\n"
 	"uniform sampler2D ourTexture;\n"
-//	"uniform vec3 lightColor;\n"
+	"uniform float transition;\n"
 
     "void main()\n"
     "{\n"
 	"   if (shading == 0)\n"
 	"   {\n"
-    "   	FragColor = color;\n"
+    "   	FragColor = flat_color;\n"
+	"   }\n"
+	"   else if (shading == 1)\n"
+	"   {\n"
+    "   	FragColor = smooth_color;\n"
 	"   }\n"
 	" 	else\n"
 	" 	{\n"
-    "   	FragColor = texture(ourTexture, mytexCoord);\n" 
+    "   	FragColor = mix(smooth_color, texture(ourTexture, mytexCoord), transition);\n"
 	" 	}\n"
-    //"   FragColor = vec4(lightColor * objectColor, 1.0);\n"
     "}\n\0";
-
 
 unsigned int compile_vertex_shader() {
 	unsigned int vertex_shader;
@@ -156,11 +162,11 @@ void run(t_env *e)
 //	printf("pointnb %d\n", e->data_size.points);
 //	printf("pointnb %d\n", e->data_size.points);
 
-	for (unsigned int i = 0; i < e->data_size.indice_nb; i++)
-	{
-		printf("%f %f %f    %f %f\n", e->mesh.verts[e->mesh.index_buffer[i]].pos.x, e->mesh.verts[e->mesh.index_buffer[i]].pos.y, e->mesh.verts[e->mesh.index_buffer[i]].pos.z, e->mesh.verts[e->mesh.index_buffer[i]].text_coords.x, e->mesh.verts[e->mesh.index_buffer[i]].text_coords.y);
-	}
-	//for (unsigned int i = 0; i < e->data_size.indice_nb;i++)
+//	for (unsigned int i = 0; i < e->data_size.indice_nb; i++)
+//	{
+//		printf("%f %f %f    %f %f\n", e->mesh.verts[e->mesh.index_buffer[i]].pos.x, e->mesh.verts[e->mesh.index_buffer[i]].pos.y, e->mesh.verts[e->mesh.index_buffer[i]].pos.z, e->mesh.verts[e->mesh.index_buffer[i]].text_coords.x, e->mesh.verts[e->mesh.index_buffer[i]].text_coords.y);
+//	}
+//	//for (unsigned int i = 0; i < e->data_size.indice_nb;i++)
 	//{
 		//printf("%d\n", e->mesh.index_buffer[i]);
 	//}
@@ -221,8 +227,8 @@ void run(t_env *e)
  	t_mat4x4 	view;
  	t_mat4x4 	projection;
 
-	view = identity_mat4x4();
-	view = translate_mat4x4(view, vec3(0.0f, 0.0f, -(e->data_size.max.z - e->data_size.min.z) * 0.6f));
+	float 		transition;
+	e->camera = vec3(0.0f, 0.0f, -(e->data_size.max.z - e->data_size.min.z) * 0.6f);
 	projection = perspective(deg_to_rad(50.0f), WIN_W / (float)WIN_H, 0.1f, 1000.0f);
 
 	while (!glfwWindowShouldClose(e->window)) 
@@ -232,6 +238,8 @@ void run(t_env *e)
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		view = identity_mat4x4();
+		view = translate_mat4x4(view, e->camera);
 		t_mat4x4    scale;
 		scale = identity_mat4x4();
 		scale = scale_4x4mat(scale, vec3(0.4f, 0.4f, 0.4f));
@@ -243,7 +251,19 @@ void run(t_env *e)
 		int modelLoc = glGetUniformLocation(shader_program, "model");
 		int viewloc = glGetUniformLocation(shader_program, "view");
 		int projLoc = glGetUniformLocation(shader_program, "projection");
+		int transitionLoc = glGetUniformLocation(shader_program, "transition");
 		glUniform1i(shadingLoc, e->shading);
+		if (e->shading == 2)
+		{
+			if (transition < 1.0f)
+				transition += 0.003f * glfwGetTime();
+			else
+				transition = 1.0f;
+		}
+		else 
+			transition = 0.0f;
+
+		glUniform1f(transitionLoc, transition);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &model.m[0][0]);
 		glUniformMatrix4fv(viewloc, 1, GL_FALSE, &view.m[0][0]);
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, &projection.m[0][0]);

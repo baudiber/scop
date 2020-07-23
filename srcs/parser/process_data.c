@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 16:16:47 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/22 09:15:38 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/07/22 16:17:23 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,12 +112,9 @@ void 	create_vert_lst(t_env *e)
 		{
 			vert_it->next = add_vert_node(tmp_vert);
 			vert_it = vert_it->next;
-			printf("node added!\n");
 			vert_it->v.index = vert_nb;
 			vert_nb++;
 		}
-		else
-			printf("vert already exists!\n");
 	}
 	e->data_size.vert_nb = vert_nb;
 	printf("final vert nb: %d\n", vert_nb);
@@ -139,7 +136,6 @@ void 	create_index_buffer(t_env *e)
 		e->mesh.index_buffer[i] = found_index;
 		i++;
 	}
-	printf("final indicenb %d\n", e->data_size.indice_nb);
 }
 
 void 	create_vert_data(t_env *e)
