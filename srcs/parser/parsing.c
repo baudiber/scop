@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 16:19:50 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/15 18:27:04 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/07/23 11:28:05 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void 		free_lists(t_env *e)
 
 void 	parse_obj(char *file_path, t_env *e)
 {
-	if (!parse_file(file_path, e))
+	if (!read_file(file_path, e))
     {
         ft_putendl("ERROR parsing file");
 		exit (-1);

@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 16:16:47 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/22 16:17:23 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/07/23 13:07:49 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,10 @@ void 	create_vert_lst(t_env *e)
 	for (unsigned int i = 0; i < e->data_size.indice_nb; i++)
 	{
 		tmp_vert.pos = e->data.v[e->data.indices[i].x - 1];
-		tmp_vert.text_coords = e->data.vt[e->data.indices[i].y - 1];
+		if (e->mesh.textured)
+			tmp_vert.text_coords = e->data.vt[e->data.indices[i].y - 1];
+		else
+			tmp_vert.text_coords = vec2(0.0f, 0.0f);
 		if (vert_nb == 0 || (found_index = vert_already_exists(tmp_vert, e)) < 0)
 		{
 			vert_it->next = add_vert_node(tmp_vert);
@@ -199,7 +202,8 @@ void 	malloc_vertices(t_env *e)
 void 	process_data(t_env *e)
 {
 	process_vdata(e);
-	process_vtdata(e);
+	if (e->mesh.textured)
+		process_vtdata(e);
 	process_fdata(e);
 	create_vert_lst(e);
 	malloc_vertices(e);

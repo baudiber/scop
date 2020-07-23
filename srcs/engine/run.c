@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/23 11:12:38 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/07/23 13:08:22 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,15 @@ t_vec3 vec3(float x, float y, float z)
 	ret.x = x;
 	ret.y = y;
 	ret.z = z;
+	return (ret);
+}
+
+t_vec2 vec2(float x, float y)
+{
+	t_vec2 ret;
+
+	ret.x = x;
+	ret.y = y;
 	return (ret);
 }
 

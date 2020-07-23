@@ -1,14 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read_file.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: baudibert <marvin@42.fr>                   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/07/23 15:11:36 by baudibert         #+#    #+#             */
+/*   Updated: 2020/07/23 15:11:39 by baudibert        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/scop.h"
 #include <stdio.h>
-
-// # for comments
-// v  for vectors               followed by x y z w                      w is optional and will default to 1.0
-// vp for free-form geometry
-// mtllib <.mtl file>
-// o object
-// usemtl <material name>
-// s on/off
-// f  for faces   followed by vectex by index (starting at 1)
 
 void 		malloc_buffers(t_env *e)
 {
@@ -154,6 +157,7 @@ static void new_parser(int fd, t_env *e)
 	v_nb = 0;
 	vt_nb = 0;
 	i_nb = 0;
+		printf("test\n");
     while ((get_next_line(fd, &line)) > 0)
 	{
         if (line && !ft_strncmp(line, "v ", 2))
@@ -181,17 +185,20 @@ static void new_parser(int fd, t_env *e)
 			f_it = f_it->next;
 			i_nb += f_it->nb;
 		}
-        (line) ? ft_strdel(&line) : 0;
+        ft_strdel(&line);
 	}
-    (line) ? ft_strdel(&line) : 0;
 
 	e->data_size.indice_nb = i_nb;
 	e->data_size.v_nb = v_nb;
 	e->data_size.vt_nb = vt_nb;
-	e->data_size.vt_nb = vt_nb;
+	if (!v_nb || !i_nb)
+	{
+		printf("file error\n");
+		exit(-1);
+	}
 }
 
-bool    parse_file(char *file_name, t_env *e)
+bool    read_file(char *file_name, t_env *e)
 {
     int     fd;
 

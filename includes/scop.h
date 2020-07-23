@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/22 18:25:51 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/07/23 13:09:03 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,13 +109,14 @@ struct s_env
 
 void 	parse_obj(char *file_path, t_env *e);
 void 	process_data(t_env *e);
-bool    parse_file(char *file_name, t_env *e);
+bool    read_file(char *file_name, t_env *e);
 bool    init(t_env *e);
 t_env					*get_env(void);
 
 void    run(t_env *e);
 
 void 	process_inputs(GLFWwindow *window);
+t_vec2 vec2(float x, float y);
 t_vec4 vec4(float x, float y, float z);
 t_vec3 vec3(float x, float y, float z);
 
