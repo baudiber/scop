@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/23 01:16:23 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/07/23 11:12:38 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ const char *vertexShaderSource = "#version 410 core\n"
     "{\n"
     "   gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
 	" 	gl_PointSize = gl_Position.z * 0.5;\n"
-	" 	flat_color = vec4( gl_Position.x * 0.4, gl_Position.y * 0.3 , gl_Position.z * 0.4  , 1.0);\n"
+	" 	flat_color = vec4( gl_Position.x * 0.4, gl_Position.y * 0.3 , gl_Position.z * 0.8  , 1.0);\n"
 	" 	smooth_color = flat_color;\n"
 	" 	mytexCoord = texCoord;\n"
     "}\0";
@@ -48,7 +48,8 @@ const char *fragmentShaderSource = "#version 410 core\n"
     "{\n"
 	"   if (shading == 0)\n"
 	"   {\n"
-    "   	FragColor = flat_color;\n"
+	"		float gray = dot(flat_color.rgb, vec3(0.299, 0.587, 0.114));\n"
+    "   	FragColor = vec4(gray, gray, gray, flat_color.a);\n"
 	"   }\n"
 	"   else if (shading == 1)\n"
 	"   {\n"

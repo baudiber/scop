@@ -6,87 +6,42 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 14:09:37 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/22 18:27:56 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/07/23 10:34:48 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../../includes/scop.h"
 
-void 	flat_color_selected(void)
+void 	set_shading(int shading)
 {
 	t_env *e;
 
 	e = get_env();
-	e->shading = 0;
-}
-
-void 	smooth_color_selected(void)
-{
-	t_env *e;
-
-	e = get_env();
-	e->shading = 1;
-	if (e->transition < 1.0f)
-		e->transition += 0.05;
-}
-
-void 	texture_selected(void)
-{
-	t_env *e;
-
-	e = get_env();
-	if (e->mesh.textured)
-		e->shading = 2;
-	else
+	if (shading == 2 && !e->mesh.textured)
+	{
 		printf("no texture coordinates found!\n");
+		return;
+	}
+	e->shading = shading;
 }
 
-void 	go_up(void)
+void 	movement(int dir)
 {
 	t_env *e;
 
 	e = get_env();
-	e->camera.y += 0.01f;
-}
-
-void 	go_down(void)
-{
-	t_env *e;
-
-	e = get_env();
-	e->camera.y -= 0.01f;
-}
-
-void 	go_right(void)
-{
-	t_env *e;
-
-	e = get_env();
-	e->camera.x += 0.01f;
-}
-
-void 	go_left(void)
-{
-	t_env *e;
-
-	e = get_env();
-	e->camera.x -= 0.01f;
-}
-
-void 	go_far(void)
-{
-	t_env *e;
-
-	e = get_env();
-	e->camera.z -= 0.01f;
-}
-
-void 	go_close(void)
-{
-	t_env *e;
-
-	e = get_env();
-	e->camera.z += 0.01f;
+	if (dir == 0)
+		e->camera.y += 0.01f;
+	else if (dir == 1)
+		e->camera.y -= 0.01f;
+	else if (dir == 2)
+		e->camera.x += 0.01f;
+	else if (dir == 3)
+		e->camera.x -= 0.01f;
+	else if (dir == 4)
+		e->camera.z += 0.01f;
+	else if (dir == 5)
+		e->camera.z -= 0.01f;
 }
 
 void process_inputs(GLFWwindow *window) {
@@ -99,21 +54,21 @@ void process_inputs(GLFWwindow *window) {
 	if (glfwGetKey(window, GLFW_KEY_SLASH) == GLFW_PRESS) 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) 
-		texture_selected();
+		set_shading(2);
 	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) 
-		flat_color_selected();
+		set_shading(0);
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) 
-		smooth_color_selected();
+		set_shading(1);
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) 
-		go_up();
+		movement(0);
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) 
-		go_down();
+		movement(1);
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) 
-		go_right();
+		movement(2);
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) 
-		go_left();
+		movement(3);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) 
-		go_far();
+		movement(4);
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) 
-		go_close();
+		movement(5);
 }
