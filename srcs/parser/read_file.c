@@ -6,7 +6,7 @@
 /*   By: baudibert <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/23 15:11:36 by baudibert         #+#    #+#             */
-/*   Updated: 2020/07/23 15:11:39 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/07/24 10:59:09 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ t_f_lst 	*parse_face_line_textured(const char *line)
 		printf("parsing error: weird number of indices\n");
 		exit(-1);
 	}
-	new->nb = i_nb * 0.5;
+	new->nb = (i_nb == 6) ? 3 : 6;
 	new->next = NULL;
 	return (new);
 }
@@ -110,12 +110,12 @@ t_f_lst 	*parse_face_line(const char *line)
 		exit (-1);
 	}
 	i_nb = sscanf(line, "f %d %d %d %d", &new->indices[0], &new->indices[1], &new->indices[2], &new->indices[3]);
-	if (i_nb < 3)
+	if (i_nb != 3 && i_nb != 4)
 	{
 		printf("parsing error: weird number of indices\n");
 		exit(-1);
 	}
-	new->nb = i_nb;
+	new->nb = (i_nb == 3) ? 3 : 6;
 	new->next = NULL;
 	return (new);
 }
@@ -157,7 +157,6 @@ static void new_parser(int fd, t_env *e)
 	v_nb = 0;
 	vt_nb = 0;
 	i_nb = 0;
-		printf("test\n");
     while ((get_next_line(fd, &line)) > 0)
 	{
         if (line && !ft_strncmp(line, "v ", 2))
@@ -187,7 +186,6 @@ static void new_parser(int fd, t_env *e)
 		}
         ft_strdel(&line);
 	}
-
 	e->data_size.indice_nb = i_nb;
 	e->data_size.v_nb = v_nb;
 	e->data_size.vt_nb = vt_nb;
@@ -204,9 +202,8 @@ bool    read_file(char *file_name, t_env *e)
 
     if ((fd = open(file_name, O_DIRECTORY)) >= 0)
         return (false);
-    if ((fd = open(file_name, O_RDONLY)) < 0) {
+    if ((fd = open(file_name, O_RDONLY)) < 0)
         return (false);
-	}
 	new_parser(fd, e);
 	malloc_buffers(e);
 	printf("textured: %d vnb: %d vtnb: %d indexnb: %d\n", e->mesh.textured, e->data_size.v_nb, e->data_size.vt_nb, e->data_size.indice_nb);

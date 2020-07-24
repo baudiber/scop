@@ -6,68 +6,19 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/23 13:08:22 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/07/24 11:48:23 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/scop.h"
 
-const char *vertexShaderSource = "#version 410 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "layout (location = 1) in vec2 texCoord;\n"
-
-	"uniform mat4 model;\n"
-	"uniform mat4 view;\n"
-	"uniform mat4 projection;\n"
-
-	"flat out vec4 flat_color;\n"
-	"smooth out vec4 smooth_color;\n"
-	"out vec2 mytexCoord;\n"
-
-    "void main()\n"
-    "{\n"
-    "   gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
-	" 	gl_PointSize = gl_Position.z * 0.5;\n"
-	" 	flat_color = vec4( gl_Position.x * 0.4, gl_Position.y * 0.3 , gl_Position.z * 0.8  , 1.0);\n"
-	" 	smooth_color = flat_color;\n"
-	" 	mytexCoord = texCoord;\n"
-    "}\0";
-
-const char *fragmentShaderSource = "#version 410 core\n"
-	"out vec4 FragColor;\n"
-
-	"flat in vec4 flat_color;\n"
-	"smooth in vec4 smooth_color;\n"
-	"in vec2 mytexCoord;\n"
-
-	"uniform int shading;\n"
-	"uniform sampler2D ourTexture;\n"
-	"uniform float transition;\n"
-
-    "void main()\n"
-    "{\n"
-	"   if (shading == 0)\n"
-	"   {\n"
-	"		float gray = dot(flat_color.rgb, vec3(0.299, 0.587, 0.114));\n"
-    "   	FragColor = vec4(gray, gray, gray, flat_color.a);\n"
-	"   }\n"
-	"   else if (shading == 1)\n"
-	"   {\n"
-    "   	FragColor = smooth_color;\n"
-	"   }\n"
-	" 	else\n"
-	" 	{\n"
-    "   	FragColor = mix(smooth_color, texture(ourTexture, mytexCoord), transition);\n"
-	" 	}\n"
-    "}\n\0";
-
-unsigned int compile_vertex_shader() {
+unsigned int compile_vertex_shader(t_env *e) {
 	unsigned int vertex_shader;
 	int success;
 	char info_log[512];
 
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertex_shader, 1, &vertexShaderSource, NULL);
+	glShaderSource(vertex_shader, 1, (const char* const *)&e->vertex_shader_src, NULL);
 	glCompileShader(vertex_shader);
 	glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
 	if (!success)
@@ -80,13 +31,13 @@ unsigned int compile_vertex_shader() {
 	return vertex_shader;
 }
 
-unsigned int compile_fragment_shader() {
+unsigned int compile_fragment_shader(t_env *e) {
 	unsigned int fragment_shader;
 	int success;
 	char info_log[512];
 
 	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragment_shader, 1, &fragmentShaderSource, NULL);
+	glShaderSource(fragment_shader, 1, (const char* const*)&e->fragment_shader_src, NULL);
 	glCompileShader(fragment_shader);
 	glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
 	if (!success)
@@ -119,13 +70,13 @@ unsigned int compile_shader_program(unsigned int vertex_shader, unsigned int fra
 	return shader_program;
 }
 
-unsigned int compile_shaders() {
+unsigned int compile_shaders(t_env *e) {
 	unsigned int vertex_shader;
 	unsigned int fragment_shader;
 	unsigned int shader_program;
 
-	vertex_shader = compile_vertex_shader();
-	fragment_shader = compile_fragment_shader();
+	vertex_shader = compile_vertex_shader(e);
+	fragment_shader = compile_fragment_shader(e);
 	shader_program = compile_shader_program(vertex_shader, fragment_shader);
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
@@ -166,7 +117,7 @@ t_vec2 vec2(float x, float y)
 void run(t_env *e)
 {
 	unsigned int shader_program;
-	shader_program = compile_shaders();
+	shader_program = compile_shaders(e);
 
 //	printf("indicenb %d\n", e->data_size.indices);
 //	printf("pointnb %d\n", e->data_size.points);
@@ -206,19 +157,20 @@ void run(t_env *e)
 
 	glBindVertexArray(0);
 
-	unsigned int texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	unsigned int textures[2];
+	glGenTextures(2, &textures[0]);
+	glBindTexture(GL_TEXTURE_2D, textures[0]);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 	int width, height;
-	unsigned char *data = parse_bmp_32bit("./textures/dirt.bmp", &width, &height, 0);
-	if (data)
+	unsigned char *texture1_data = parse_bmp_32bit("./textures/wow.bmp", &width, &height, 0);
+	if (texture1_data)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture1_data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else 
@@ -226,8 +178,26 @@ void run(t_env *e)
 		ft_putendl("error loading texture");
 		exit(0);
 	}
-	free(data);
+	free(texture1_data);
 
+	glBindTexture(GL_TEXTURE_2D, textures[1]);
+	unsigned char *texture2_data = parse_bmp_32bit("./textures/dirt.bmp", &width, &height, 0);
+	if (texture2_data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture2_data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else 
+	{
+		ft_putendl("error loading texture");
+		exit(0);
+	}
+	free(texture2_data);
+
+	glUseProgram(shader_program);
+	glUniform1i(glGetUniformLocation(shader_program, "texture1"), 0);
+	glUniform1i(glGetUniformLocation(shader_program, "texture2"), 1);
+	
 //	unsigned int light_VAO;
 //	glGenVertexArrays(1, &light_VAO);
 //	glBindVertexArray(light_VAO);
@@ -238,7 +208,7 @@ void run(t_env *e)
  	t_mat4x4 	projection;
 
 	float 		transition;
-	e->camera = vec3(0.0f, 0.0f, -(e->data_size.max.z - e->data_size.min.z) * 0.6f);
+	e->camera = vec3(0.0f, 0.0f, -(e->data_size.max.z - e->data_size.min.z) * 0.6f - 1);
 	projection = perspective(deg_to_rad(50.0f), WIN_W / (float)WIN_H, 0.1f, 1000.0f);
 
 	while (!glfwWindowShouldClose(e->window)) 
@@ -278,6 +248,10 @@ void run(t_env *e)
 		glUniformMatrix4fv(viewloc, 1, GL_FALSE, &view.m[0][0]);
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, &projection.m[0][0]);
 
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textures[0]);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, textures[1]);
 		glUseProgram(shader_program);
 		glBindVertexArray(model_VAO);
 		glDrawElements(GL_TRIANGLES, e->data_size.indice_nb , GL_UNSIGNED_INT, 0);

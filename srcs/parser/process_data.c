@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 16:16:47 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/23 13:07:49 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/07/23 18:19:06 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,38 @@ void 		process_fdata(t_env *e)
 	i = 0;
 	while (f_it)
 	{
-		e->data.indices[i].x = f_it->indices[0];
-		e->data.indices[i + 1].x = f_it->indices[1];
-		e->data.indices[i + 2].x = f_it->indices[2];
-		(f_it->nb == 4) ? e->data.indices[i + 3].x = f_it->indices[3] : 0;
-		if (e->mesh.textured)
+		if (f_it->nb == 3)
 		{
-			e->data.indices[i].y = f_it->tex_cords[0];
-			e->data.indices[i + 1].y = f_it->tex_cords[1];
-			e->data.indices[i + 2].y = f_it->tex_cords[2];
-			(f_it->nb == 4) ? e->data.indices[i + 3].y = f_it->tex_cords[3] : 0;
+			e->data.indices[i].x = f_it->indices[0];
+			e->data.indices[i + 1].x = f_it->indices[1];
+			e->data.indices[i + 2].x = f_it->indices[2];
+			if (e->mesh.textured)
+			{
+				e->data.indices[i].y = f_it->tex_cords[0];
+				e->data.indices[i + 1].y = f_it->tex_cords[1];
+				e->data.indices[i + 2].y = f_it->tex_cords[2];
+			}
+			i += 3;
 		}
-		i += f_it->nb;
+		else if (f_it->nb == 6)
+		{
+			e->data.indices[i].x = f_it->indices[0];
+			e->data.indices[i + 1].x = f_it->indices[1];
+			e->data.indices[i + 2].x = f_it->indices[2];
+			e->data.indices[i + 3].x = f_it->indices[2];
+			e->data.indices[i + 4].x = f_it->indices[3];
+			e->data.indices[i + 5].x = f_it->indices[0];
+			if (e->mesh.textured)
+			{
+				e->data.indices[i].y = f_it->tex_cords[0];
+				e->data.indices[i + 1].y = f_it->tex_cords[1];
+				e->data.indices[i + 2].y = f_it->tex_cords[2];
+				e->data.indices[i + 3].y = f_it->tex_cords[2];
+				e->data.indices[i + 4].y = f_it->tex_cords[3];
+				e->data.indices[i + 5].y = f_it->tex_cords[0];
+			}
+			i += 6;
+		}
 		f_it = f_it->next;
 	}
 }
@@ -87,7 +107,6 @@ t_vert_lst 	*add_vert_node(t_vertex vert)
 	return (new);
 }
 
-//TODO CHECK FOR SIZES BEFORE ACCESSING INDEX
 void 	create_vert_lst(t_env *e)
 {
 	e->vert_lst = (t_vert_lst *)malloc(sizeof(t_vert_lst));	
@@ -106,9 +125,21 @@ void 	create_vert_lst(t_env *e)
 	vert_nb = 0;
 	for (unsigned int i = 0; i < e->data_size.indice_nb; i++)
 	{
+		if (e->data.indices[i].x > (int)e->data_size.v_nb || e->data.indices[i].x < 0)
+		{
+			printf("v index problem: %d\n", e->data.indices[i].x);
+			exit(-1);
+		}
 		tmp_vert.pos = e->data.v[e->data.indices[i].x - 1];
 		if (e->mesh.textured)
+		{
+			if (e->data.indices[i].y > (int)e->data_size.vt_nb || e->data.indices[i].y < 0)
+			{
+				printf("vt index problem: %d\n", e->data.indices[i].y);
+				exit(-1);
+			}
 			tmp_vert.text_coords = e->data.vt[e->data.indices[i].y - 1];
+		}
 		else
 			tmp_vert.text_coords = vec2(0.0f, 0.0f);
 		if (vert_nb == 0 || (found_index = vert_already_exists(tmp_vert, e)) < 0)

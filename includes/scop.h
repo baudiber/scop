@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/23 13:09:03 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/07/24 10:57:47 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,8 @@ struct s_env
 	t_vt_lst 		*vt_lst;
 	t_f_lst 		*f_lst;
 	t_vert_lst 		*vert_lst;
+	char 			*vertex_shader_src;
+	char 			*fragment_shader_src;
 	int 			shading;
 };
 
@@ -120,6 +122,7 @@ t_vec2 vec2(float x, float y);
 t_vec4 vec4(float x, float y, float z);
 t_vec3 vec3(float x, float y, float z);
 
+void 	parse_shaders(t_env *e);
 t_mat4x4	scale_mat4x4(t_vec4 scale);
 t_mat4x4	translate_mat4x4(t_mat4x4 mat, t_vec3 vec);
 t_mat4x4	identity_mat4x4(void);

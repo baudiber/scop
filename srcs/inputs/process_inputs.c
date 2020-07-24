@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 14:09:37 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/23 11:25:17 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/07/24 10:27:10 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void 	set_shading(int shading)
 	t_env *e;
 
 	e = get_env();
-	if (shading == 2 && !e->mesh.textured)
+	if (shading >= 2 && !e->mesh.textured)
 	{
 		printf("no texture coordinates found!\n");
 		return;
@@ -71,4 +71,8 @@ void process_inputs(GLFWwindow *window) {
 		movement(4);
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) 
 		movement(5);
+	if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS) 
+		set_shading(3);
+	if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS) 
+		set_shading(2);
 }

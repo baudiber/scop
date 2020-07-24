@@ -6,7 +6,7 @@
 #    By: baudiber <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/13 12:30:36 by baudiber          #+#    #+#              #
-#    Updated: 2020/07/15 16:21:35 by baudiber         ###   ########.fr        #
+#    Updated: 2020/07/24 10:58:11 by baudibert        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRC			=	main.c							\
 				engine/init.c					\
 				engine/run.c					\
 				inputs/process_inputs.c 		\
+				parser/shaders.c 				\
 				parser/read_file.c 				\
 				parser/process_data.c 			\
 				parser/parsing.c 				\
