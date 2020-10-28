@@ -6,11 +6,13 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/24 11:48:23 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/10/28 14:47:11 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/scop.h"
+
+#define GL_SILENCE_DEPRECATION 1
 
 unsigned int compile_vertex_shader(t_env *e) {
 	unsigned int vertex_shader;

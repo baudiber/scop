@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:24 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/07 19:11:53 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/10/28 14:57:56 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,10 @@ void error_callback(int error, const char* description)
 
 bool init(t_env *e)
 {
+	GLenum err;
+
 	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+	init_gl_version();
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -47,9 +48,11 @@ bool init(t_env *e)
 	}
 	glfwMakeContextCurrent(e->window);
 	glfwSetFramebufferSizeCallback(e->window, framebuffer_size_callback);
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	err = glewInit();
+	if (err != GLEW_OK)
 	{
-		ft_putendl("Failed to init GLAD");
+		printf("Glew error: %s\n", glewGetErrorString(err));
+		glfwTerminate();
 		return (false);
 	}
 	e->shading = 1;

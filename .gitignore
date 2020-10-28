@@ -1,4 +1,5 @@
 objs
+.idea
 scop
 .DS_STORE
 .vscode

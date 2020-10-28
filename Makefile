@@ -6,7 +6,7 @@
 #    By: baudiber <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/13 12:30:36 by baudiber          #+#    #+#              #
-#    Updated: 2020/07/24 10:58:11 by baudibert        ###   ########.fr        #
+#    Updated: 2020/10/28 14:51:19 by baudibert        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,18 +16,17 @@ SRC_DIR		=	./srcs
 INC_DIR		=	./includes
 OBJ_DIR		=	./objs
 LIBFT_DIR	=	./libft
-LIBGRAPH_DIR =  ./libgraph
 
-SRC			=	main.c							\
-				glad.c							\
-				engine/init.c					\
+SRC			=	scop.c							\
 				engine/run.c					\
+				engine/init.c					\
+				engine/matrix_ops.c 			\
 				inputs/process_inputs.c 		\
-				parser/shaders.c 				\
+				libgraph/parse_bmp.c 			\
+				libgraph/matrix_operations.c	\
 				parser/read_file.c 				\
 				parser/process_data.c 			\
 				parser/parsing.c 				\
-				engine/matrix_ops.c
 
 R			=	\033[31m
 G			=	\033[32m
@@ -36,16 +35,23 @@ W			=	\033[0m
 O			=	\033[33m
 
 FLAGS		=	-Wall -Werror -Wextra
-INCLUDES	=	-I$(INC_DIR) `pkg-config --cflags glfw3`
+INCLUDES	=	-I$(INC_DIR) -I$(LIBFT_DIR) `pkg-config --cflags glfw3`
 HEADER_H	=	$(INC_DIR)/$(NAME).h
 
 OBJ 		=	$(addprefix $(OBJ_DIR)/,$(SRC:.c=.o))
+
 ifeq ($(shell uname -s), Darwin)
-   LIBS		=	-L $(LIBFT_DIR) -lft -L $(LIBGRAPH_DIR) -lgraph `pkg-config --static --libs glfw3` -framework OpenGL -framework Appkit
+   SRC 		    +=  main_mac.c 					\
+					engine/init_mac.c			\
+					parser/shaders_mac.c
+   LIBS			=	-L $(LIBFT_DIR) -lft `pkg-config --static --libs glfw3 glew` -framework OpenGL -framework Appkit
    CC 			=	gcc
 else ifeq ($(shell uname -s), Linux) 
-	LIBS		=	-L $(LIBFT_DIR) -lft -L $(LIBGRAPH_DIR) -lgraph `pkg-config --static --libs glfw3` -lGL -lX11 -lpthread -lXrandr -lXi -ldl
-	CC 			=	clang
+   SRC 		    +=  main_linux.c 				\
+					engine/init_linux.c			\
+					parser/shaders_linux.c
+   LIBS			=	-L $(LIBFT_DIR) -lft `pkg-config --static --libs glfw3 glew` -lGL -lX11 -lpthread -lXrandr -lXi -ldl
+   CC 			=	clang
 endif
 
 all: art $(NAME)
@@ -63,10 +69,10 @@ $(OBJ_DIR):
 	@mkdir -p $@/parser
 	@mkdir -p $@/engine
 	@mkdir -p $@/inputs
+	@mkdir -p $@/libgraph
 
 lib:
 	@make -C $(LIBFT_DIR)
-	@make -C $(LIBGRAPH_DIR)
 
 art:
 	@echo " ███████╗ ██████╗ ██████╗ ████████╗"
@@ -80,11 +86,9 @@ clean:
 	@rm -f $(OBJ)
 	@rm -rf $(OBJ_DIR)
 	@make -C $(LIBFT_DIR) clean
-	@make -C $(LIBGRAPH_DIR) clean
 
 fclean: clean
 	@make -C $(LIBFT_DIR) fclean
-	@make -C $(LIBGRAPH_DIR) fclean
 	@rm -f $(NAME)
 
 re: fclean all

@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/24 10:57:47 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/10/28 14:57:27 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 # define WIN_W 800
 # define WIN_H 600
 
-# include "../libft/libft.h"
-# include "../libgraph/includes/libgraph.h"
-# include <glad/glad.h> 
+# include <libft.h>
+# include <libgraph.h>
+# include <GL/glew.h>
 # include "GLFW/glfw3.h"
 # include <stdbool.h>
 # include <fcntl.h>
@@ -109,6 +109,8 @@ struct s_env
 	int 			shading;
 };
 
+void 	scop(char *av1);
+void 	init_gl_version(void);
 void 	parse_obj(char *file_path, t_env *e);
 void 	process_data(t_env *e);
 bool    read_file(char *file_name, t_env *e);
