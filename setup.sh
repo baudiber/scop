@@ -1,6 +1,6 @@
 #! /bin/bash
 
-prefix="\033[2;37m[libsdl2.so/setup] - \033[0m"
+prefix="\033[2;37m[SCOP/setup] - \033[0m"
 
 function mac_setup() {
 	list=`brew list`;
@@ -21,17 +21,17 @@ function mac_setup() {
 		fi
 	fi
 
-	sdl2=`echo $list | grep glfw`
+	glfw=`echo $list | grep glfw`
 	if [ $? -ne 0 ]
 	then
-		printf "$prefix sdl2 is missing.\n"
-		brew install SDL2
+		printf "$prefix glfw is missing.\n"
+		brew install glfw
 		if [ $? -ne 0 ]
 		then
-			printf "$prefix\033[2;31msdl2 installation failed.\n\033[0m";
+			printf "$prefix\033[2;31mglfw installation failed.\n\033[0m";
 			exit 1;
 		fi
-		printf "$prefix sdl2 installed.\n"
+		printf "$prefix glfw installed.\n"
 	fi
 
 	glew=`echo $list | grep glew`
