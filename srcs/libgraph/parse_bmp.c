@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 14:54:07 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/21 11:51:29 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/11/02 00:46:26 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ unsigned char	*parse_pixels_alpha(int total_pixels, int fd)
 ** Return: img data in bytes
 */
 
-unsigned char	*parse_bmp_32bit(char *file_path, int *w, int *h, int alpha)
+unsigned char	*parse_bmp_32bit(const char *file_path, int *w, int *h, int alpha)
 {
 	int			fd;
 

@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 15:16:10 by baudiber          #+#    #+#             */
-/*   Updated: 2020/07/06 18:20:09 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/11/01 23:43:15 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,19 +104,15 @@ t_mat4x4 	rotation_mat4x4(t_mat4x4 src_mat, float angle, t_vec3 axis)
 	temp.x = norm_axis.x * (1.0 - cos_angle);
 	temp.y = norm_axis.y * (1.0 - cos_angle);
 	temp.z = norm_axis.z * (1.0 - cos_angle);
-
 	rot_mat.m[0][0] = cos_angle + temp.x * norm_axis.x;
 	rot_mat.m[0][1] = 0 + temp.x * norm_axis.y + sin_angle * norm_axis.z;
 	rot_mat.m[0][2] = 0 + temp.x * norm_axis.z - sin_angle * norm_axis.y;
-	
 	rot_mat.m[1][0] = 0 + temp.y * norm_axis.x - sin_angle * norm_axis.z;
 	rot_mat.m[1][1] = cos_angle + temp.y * norm_axis.y;
 	rot_mat.m[1][2] = 0 + temp.y * norm_axis.z + sin_angle * norm_axis.x;
-
 	rot_mat.m[2][0] = 0 + temp.z * norm_axis.x + sin_angle * norm_axis.y;
 	rot_mat.m[2][1] = 0 + temp.z * norm_axis.y - sin_angle * norm_axis.x;
 	rot_mat.m[2][2] = cos_angle + temp.z * norm_axis.z;
-
 	rot_mat.m[3][0] = 0.0f;
 	rot_mat.m[3][1] = 0.0f;
 	rot_mat.m[3][2] = 0.0f;

@@ -2,9 +2,8 @@
 
 void 	clean_exit(const char *msg)
 {
-	printf("%s", msg);
+	printf("%s\n", msg);
 	//free_lists?
-	//opengl exit?
 	glfwTerminate();
 	exit(1);
 }
@@ -28,7 +27,8 @@ void print_man()
 	printf(". for WIREFRAME view\n");
 	printf("/ for VERTEX view\n");
 	printf(", revert to FILLED view\n");
-	printf("+- switch between textures(2)\n");
+	printf("- switch to Minecraft texture\n");
+	printf("+ switch to unicorn kitty texture (sigh)\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 
 	printf("Some shading and texturing options will not work unless\n");
@@ -48,11 +48,7 @@ void scop(char *av1)
     ft_putendl(av1);
 	parse_obj(av1, e);
 	parse_shaders(e);
-    if (!init(e))
-    {
-        ft_putendl("ERROR during init");
-        return;
-    }
+    init(e);
     run(e);
 	glfwTerminate();
 }

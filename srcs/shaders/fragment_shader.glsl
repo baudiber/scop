@@ -27,6 +27,6 @@ void main()
 	}
 	else
 	{
-		FragColor = texture(texture2, mytexCoord);
+		FragColor = mix(smooth_color, texture(texture2, mytexCoord), transition);
 	}
 }

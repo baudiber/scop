@@ -6,7 +6,7 @@
 #    By: baudiber <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/13 12:30:36 by baudiber          #+#    #+#              #
-#    Updated: 2020/10/28 14:51:19 by baudibert        ###   ########.fr        #
+#    Updated: 2020/11/02 00:38:40 by baudibert        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,14 +18,21 @@ OBJ_DIR		=	./objs
 LIBFT_DIR	=	./libft
 
 SRC			=	scop.c							\
+				init.c							\
 				engine/run.c					\
-				engine/init.c					\
 				engine/matrix_ops.c 			\
 				inputs/process_inputs.c 		\
 				libgraph/parse_bmp.c 			\
+				libgraph/utils.c 			    \
 				libgraph/matrix_operations.c	\
 				parser/read_file.c 				\
+				parser/data_mallocs.c			\
+				parser/lists.c			\
+				parser/parse_line.c 			\
+				parser/parse_faces.c 			\
 				parser/process_data.c 			\
+				parser/process_face_data.c 			\
+				parser/vert_creation.c 			\
 				parser/parsing.c 				\
 
 R			=	\033[31m
@@ -42,13 +49,13 @@ OBJ 		=	$(addprefix $(OBJ_DIR)/,$(SRC:.c=.o))
 
 ifeq ($(shell uname -s), Darwin)
    SRC 		    +=  main_mac.c 					\
-					engine/init_mac.c			\
+					init_mac.c			\
 					parser/shaders_mac.c
    LIBS			=	-L $(LIBFT_DIR) -lft `pkg-config --static --libs glfw3 glew` -framework OpenGL -framework Appkit
    CC 			=	gcc
 else ifeq ($(shell uname -s), Linux) 
    SRC 		    +=  main_linux.c 				\
-					engine/init_linux.c			\
+					init_linux.c			\
 					parser/shaders_linux.c
    LIBS			=	-L $(LIBFT_DIR) -lft `pkg-config --static --libs glfw3 glew` -lGL -lX11 -lpthread -lXrandr -lXi -ldl
    CC 			=	clang
