@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../../includes/scop.h"
+# include <scop.h>
 
 void 	set_shading(int shading)
 {

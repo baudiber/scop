@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/libgraph.h"
-#include "../includes/bmp.h"
+#include <libgraph.h>
+#include <bmp.h>
 #include <stdio.h>
 #include <errno.h>
 
@@ -58,7 +58,6 @@ unsigned char	*parse_pixels_alpha(int total_pixels, int fd)
 	t_image_data	id;
 	unsigned char	*data;
 	int				i;
-	ssize_t			ret;
 
 	if (!(data = (unsigned char*)malloc(sizeof(unsigned char) \
 			* (total_pixels * 4) + 1)))
@@ -66,7 +65,7 @@ unsigned char	*parse_pixels_alpha(int total_pixels, int fd)
 	i = 0;
 	while (i < total_pixels)
 	{
-		ret = read(fd, &id, sizeof(id));
+		read(fd, &id, sizeof(id));
 		data[i * 4] = id.r;
 		data[(i * 4) + 1] = id.g;
 		data[(i * 4) + 2] = id.b;

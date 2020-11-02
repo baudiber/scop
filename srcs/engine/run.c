@@ -26,8 +26,6 @@ void setup_buffers(t_env *e)
 		* e->data_size.indice_nb , &e->mesh.index_buffer[0], GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (void*)0);
-    //glEnableVertexAttribArray(1);
-    //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (void*)sizeof(t_vec3));
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(t_vertex),
 		(void*)sizeof(t_vec3));
@@ -77,26 +75,6 @@ void 	clear_gl_items(t_env *e)
 	glDeleteProgram(e->shader_program);
 	glDeleteTextures(1, &e->textures[0]);
 	glDeleteTextures(1, &e->textures[1]);
-}
-
-void 	set_uniforms(t_env *e)
-{
-	int 	shadingLoc;
-	int 	modelLoc;
-	int 	viewloc;
-	int 	projLoc;
-	int 	transitionLoc;
-
-	shadingLoc = glGetUniformLocation(e->shader_program, "shading");
-	modelLoc = glGetUniformLocation(e->shader_program, "model");
-	viewloc = glGetUniformLocation(e->shader_program, "view");
-	projLoc = glGetUniformLocation(e->shader_program, "projection");
-	transitionLoc = glGetUniformLocation(e->shader_program, "transition");
-	glUniform1i(shadingLoc, e->shading);
-	glUniform1f(transitionLoc, e->transition);
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &e->model.m[0][0]);
-	glUniformMatrix4fv(viewloc, 1, GL_FALSE, &e->view.m[0][0]);
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, &e->projection.m[0][0]);
 }
 
 void run(t_env *e)

@@ -20,11 +20,12 @@ LIBFT_DIR	=	./libft
 SRC			=	scop.c							\
 				init.c							\
 				engine/run.c					\
-				engine/matrix_ops.c 			\
+				engine/shaders.c 			\
 				inputs/process_inputs.c 		\
 				libgraph/parse_bmp.c 			\
+				libgraph/matrix_ops.c 			\
+				libgraph/vec_ops.c 			\
 				libgraph/utils.c 			    \
-				libgraph/matrix_operations.c	\
 				parser/read_file.c 				\
 				parser/data_mallocs.c			\
 				parser/lists.c			\

@@ -71,3 +71,23 @@ unsigned int compile_shaders(t_env *e) {
 
 	return shader_program;
 }
+
+void 	set_uniforms(t_env *e)
+{
+    int 	shadingLoc;
+    int 	modelLoc;
+    int 	viewloc;
+    int 	projLoc;
+    int 	transitionLoc;
+
+    shadingLoc = glGetUniformLocation(e->shader_program, "shading");
+    modelLoc = glGetUniformLocation(e->shader_program, "model");
+    viewloc = glGetUniformLocation(e->shader_program, "view");
+    projLoc = glGetUniformLocation(e->shader_program, "projection");
+    transitionLoc = glGetUniformLocation(e->shader_program, "transition");
+    glUniform1i(shadingLoc, e->shading);
+    glUniform1f(transitionLoc, e->transition);
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &e->model.m[0][0]);
+    glUniformMatrix4fv(viewloc, 1, GL_FALSE, &e->view.m[0][0]);
+    glUniformMatrix4fv(projLoc, 1, GL_FALSE, &e->projection.m[0][0]);
+}

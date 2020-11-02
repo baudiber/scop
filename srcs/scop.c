@@ -3,7 +3,6 @@
 void 	clean_exit(const char *msg)
 {
 	printf("%s\n", msg);
-	//free_lists?
 	glfwTerminate();
 	exit(1);
 }
@@ -42,7 +41,6 @@ void scop(char *av1)
 
 	e = get_env();
 	ft_bzero(e, sizeof(t_env));
-
 	print_man();
     ft_putstr("Opening ");
     ft_putendl(av1);

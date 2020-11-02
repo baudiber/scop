@@ -150,6 +150,10 @@ void    parse_face_line_vts(const char *line, t_list_iterators *iterators);
 void    parse_face_line_vns(const char *line, t_list_iterators *iterators);
 void    parse_face_line_vts_vns(const char *line, t_list_iterators *iterators);
 void 	process_data(t_env *e);
+void 	normalize_mesh(t_env *e);
+void 	get_min_max(t_env *e);
+void 	set_uniforms(t_env *e);
+unsigned int compile_shaders(t_env *e);
 void    init_iterator_struct(t_list_iterators *iterators, t_env *e);
 bool        init_lists(t_env *e);
 void 		malloc_buffers(t_env *e);
@@ -174,14 +178,11 @@ t_vec2  vec2(float x, float y);
 t_vec4  vec4(float x, float y, float z);
 t_vec3  vec3(float x, float y, float z);
 void 	parse_shaders(t_env *e);
-t_mat4x4	scale_mat4x4(t_vec4 scale);
 t_mat4x4	translate_mat4x4(t_mat4x4 mat, t_vec3 vec);
 t_mat4x4	identity_mat4x4(void);
 t_mat4x4 	perspective(float fovy, float aspect_ratio, float near, float far);
 t_mat4x4 	rotation_mat4x4(t_mat4x4 src_mat, float angle, t_vec3 axis);
 t_vec3 		normalize_vec3(t_vec3 v);
-void 		print_mat(t_mat4x4 mat);
 float 		deg_to_rad(float angle);
-float 		rad_to_deg(float angle);
 
 #endif

@@ -15,5 +15,4 @@
 
 # include <OpenGL/gl.h>
 
-# define GL_SILENCE_DEPRECATION 1
 #endif
