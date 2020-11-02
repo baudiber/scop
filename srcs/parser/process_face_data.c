@@ -6,13 +6,13 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 16:16:47 by baudiber          #+#    #+#             */
-/*   Updated: 2020/11/02 16:00:15 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/11/02 19:50:59 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <scop.h>
 
-void 		process_triangle(t_env *e, int i, t_f_lst *f_it)
+void		process_triangle(t_env *e, int i, t_f_lst *f_it)
 {
 	e->data.indices[i].x = f_it->indices[0];
 	e->data.indices[i + 1].x = f_it->indices[1];
@@ -31,7 +31,7 @@ void 		process_triangle(t_env *e, int i, t_f_lst *f_it)
 	}
 }
 
-void 		process_quad(t_env *e, int i, t_f_lst *f_it)
+void		process_quad(t_env *e, int i, t_f_lst *f_it)
 {
 	e->data.indices[i].x = f_it->indices[0];
 	e->data.indices[i + 1].x = f_it->indices[1];
@@ -59,10 +59,10 @@ void 		process_quad(t_env *e, int i, t_f_lst *f_it)
 	}
 }
 
-void 		process_fdata(t_env *e)
+void		process_fdata(t_env *e)
 {
-	t_f_lst 	*f_it;
-	int 			i;
+	t_f_lst		*f_it;
+	int			i;
 
 	f_it = e->f_lst->next;
 	i = 0;
@@ -70,12 +70,12 @@ void 		process_fdata(t_env *e)
 	{
 		if (f_it->quad == false)
 		{
-			process_triangle(e, i ,f_it);
+			process_triangle(e, i, f_it);
 			i += 3;
 		}
 		else
 		{
-			process_quad(e, i ,f_it);
+			process_quad(e, i, f_it);
 			i += 6;
 		}
 		f_it = f_it->next;

@@ -6,22 +6,22 @@
 /*   By: baudibert <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/23 15:11:36 by baudibert         #+#    #+#             */
-/*   Updated: 2020/11/02 15:57:17 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/11/02 19:52:13 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <scop.h>
 
-static void read_lines(int fd, t_env *e)
+static void		read_lines(int fd, t_env *e)
 {
-    t_list_iterators    iterators;
-    char    *line;
+	t_list_iterators	iterators;
+	char				*line;
 
-    init_iterator_struct(&iterators, e);
-    while ((get_next_line(fd, &line)) > 0)
+	init_iterator_struct(&iterators, e);
+	while ((get_next_line(fd, &line)) > 0)
 	{
-        parse_line(line, &iterators, e);
-        ft_strdel(&line);
+		parse_line(line, &iterators, e);
+		ft_strdel(&line);
 	}
 	e->data_size.indice_nb = iterators.i_nb;
 	e->data_size.v_nb = iterators.v_nb;
@@ -31,16 +31,16 @@ static void read_lines(int fd, t_env *e)
 		clean_exit("file error, not enough vertice data to proceed\n");
 }
 
-bool    read_file(char *file_name, t_env *e)
+bool			read_file(char *file_name, t_env *e)
 {
-    int     fd;
+	int		fd;
 
-    if ((fd = open(file_name, O_DIRECTORY)) >= 0)
-        return (false);
-    if ((fd = open(file_name, O_RDONLY)) < 0)
-        return (false);
-    init_lists(e);
+	if ((fd = open(file_name, O_DIRECTORY)) >= 0)
+		return (false);
+	if ((fd = open(file_name, O_RDONLY)) < 0)
+		return (false);
+	init_lists(e);
 	read_lines(fd, e);
 	malloc_buffers(e);
-    return (true);
+	return (true);
 }
