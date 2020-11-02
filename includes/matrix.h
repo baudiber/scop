@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 16:36:37 by baudiber          #+#    #+#             */
-/*   Updated: 2020/06/18 16:37:36 by baudiber         ###   ########.fr       */
+/*   Updated: 2020/11/02 18:52:49 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 # define MATRIX_H
 
-typedef struct s_mat4x4 t_mat4x4;
+typedef struct s_mat4x4	t_mat4x4;
 
 struct				s_mat4x4
 {

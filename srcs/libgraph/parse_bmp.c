@@ -101,6 +101,6 @@ unsigned char	*parse_bmp_32bit(const char *file_path, int *w, int *h, int alpha)
 		return (NULL);
 	if (alpha)
 		return (parse_pixels_alpha(*w * *h, fd));
-	else 
+	else
 		return (parse_pixels(*w * *h, fd));
 }

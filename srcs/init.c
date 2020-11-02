@@ -38,7 +38,7 @@ void init(t_env *e)
 	glfwSetErrorCallback(error_callback);
 	glfwWindowHint(GLFW_SAMPLES, 8);
 	e->window = glfwCreateWindow( WIN_W, WIN_H, "scop", NULL, NULL);
-	if (!e->window) 
+	if (!e->window)
 		clean_exit("Failed to create GLFW window");
 	glfwMakeContextCurrent(e->window);
 	glfwSetFramebufferSizeCallback(e->window, framebuffer_size_callback);
