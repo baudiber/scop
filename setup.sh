@@ -49,7 +49,7 @@ function mac_setup() {
 }
 
 function linux_setup() {
-	sudo apt install libsdl2-dev libglew-dev;
+	sudo apt update && sudo apt install -y libglfw3-dev libglew-dev;
 }
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
