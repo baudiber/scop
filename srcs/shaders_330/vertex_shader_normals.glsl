@@ -14,7 +14,7 @@ void main()
 {
 	gl_Position = projection * view * model * vec4(aPos, 1.0);
 	gl_PointSize = gl_Position.z * 2.0;
-	flat_color = vec4(gl_Position * 0.8  , 1.0);
+	flat_color = vec4(gl_Position.xyz * 0.8  , 1.0);
 	norm_color = vec4(0.4f + aNorm, 1.0f);
 	smooth_color = flat_color;
 }
