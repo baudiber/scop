@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 14:09:37 by baudiber          #+#    #+#             */
-/*   Updated: 2020/11/02 19:28:10 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/11/02 22:46:27 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	set_shading(int shading)
 	e = get_env();
 	if (shading < 2)
 		e->transition = 0.0f;
-	if (shading >= 2 && !e->mesh.has_vts)
+	if (shading >= 2 && !e->mesh.has_vts && !e->mesh.has_vns)
 		return ;
 	e->shading = shading;
 }

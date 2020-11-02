@@ -6,7 +6,7 @@
 #    By: baudiber <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/13 12:30:36 by baudiber          #+#    #+#              #
-#    Updated: 2020/11/02 00:38:40 by baudibert        ###   ########.fr        #
+#    Updated: 2020/11/02 22:21:26 by baudibert        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,21 +20,21 @@ LIBFT_DIR	=	./libft
 SRC			=	scop.c							\
 				init.c							\
 				engine/run.c					\
-				engine/shaders.c 			\
+				engine/shaders.c 				\
 				inputs/process_inputs.c 		\
 				libgraph/parse_bmp.c 			\
 				libgraph/matrix_ops.c 			\
-				libgraph/vec_ops.c 			\
+				libgraph/vec_ops.c 				\
 				libgraph/utils.c 			    \
 				parser/read_file.c 				\
 				parser/data_mallocs.c			\
-				parser/lists.c			\
+				parser/lists.c					\
 				parser/parse_line.c 			\
 				parser/parse_faces.c 			\
 				parser/process_data.c 			\
-				parser/process_face_data.c 			\
+				parser/process_face_data.c 		\
 				parser/vert_creation.c 			\
-				parser/normalize_mesh.c        \
+				parser/normalize_mesh.c         \
 				parser/parsing.c 				\
 
 R			=	\033[31m
@@ -43,7 +43,7 @@ B			=	\033[34m
 W			=	\033[0m
 O			=	\033[33m
 
-FLAGS		=	-Wall -Werror -Wextra
+FLAGS		=	-Wall -Werror -Wextra -g
 INCLUDES	=	-I$(INC_DIR) -I$(LIBFT_DIR) `pkg-config --cflags glfw3`
 HEADER_H	=	$(INC_DIR)/$(NAME).h
 

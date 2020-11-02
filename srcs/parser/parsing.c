@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 16:19:50 by baudiber          #+#    #+#             */
-/*   Updated: 2020/11/02 19:48:37 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/11/02 22:20:50 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,12 @@ void	create_index_buffer(t_env *e)
 		tmp_vert.pos = e->data.v[e->data.indices[i].x - 1];
 		if (e->mesh.has_vts)
 			tmp_vert.text_coords = e->data.vt[e->data.indices[i].y - 1];
+		else
+			tmp_vert.text_coords = vec2(0.0f, 0.0f);
 		if (e->mesh.has_vns)
 			tmp_vert.normal = e->data.vn[e->data.indices[i].z - 1];
+		else
+			tmp_vert.normal = vec3(0.0f, 0.0f, 0.0f);
 		found_index = vert_already_exists(tmp_vert, e);
 		e->mesh.index_buffer[i] = found_index;
 		i++;

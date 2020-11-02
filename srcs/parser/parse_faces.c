@@ -6,7 +6,7 @@
 /*   By: baudibert <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/02 19:43:20 by baudibert         #+#    #+#             */
-/*   Updated: 2020/11/02 19:46:01 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/11/02 22:42:24 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	parse_face_line_vns(const char *line, t_list_iterators *iterators)
 
 	if (!(new = (t_f_lst *)malloc(sizeof(t_f_lst))))
 		clean_exit("malloc error");
-	i_nb = sscanf(line, "f %d/%d %d/%d %d/%d %d/%d", &new->indices[0],
+	i_nb = sscanf(line, "f %d//%d %d//%d %d//%d %d//%d", &new->indices[0],
 			&new->normals[0], &new->indices[1], &new->normals[1],
 			&new->indices[2], &new->normals[2], &new->indices[3],
 			&new->normals[3]);

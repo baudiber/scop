@@ -13,7 +13,7 @@ out vec2 mytexCoord;
 void main()
 {
 	gl_Position = projection * view * model * vec4(aPos, 1.0);
-	gl_PointSize = gl_Position.z * 0.5;
-	norm_color = vec4(0.4f + aNorm.x, 0.6f + aNorm.y, 0.5f + aNorm.z, 1.0f);
+	gl_PointSize = gl_Position.z * 2.0;
+	norm_color = vec4(0.4f + aNorm, 1.0f);
 	mytexCoord = texCoord;
 }
