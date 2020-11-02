@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   process_data.c                                     :+:      :+:    :+:   */
+/*   process_face_data.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 16:16:47 by baudiber          #+#    #+#             */
-/*   Updated: 2020/10/30 15:32:39 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/11/02 16:00:15 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ void 		process_triangle(t_env *e, int i, t_f_lst *f_it)
 		e->data.indices[i + 1].y = f_it->tex_cords[1];
 		e->data.indices[i + 2].y = f_it->tex_cords[2];
 	}
-//	if (e->mesh.has_vns)
-//	{
-//		e->data.indices[i].z = f_it->normals[0];
-//		e->data.indices[i + 1].z = f_it->normals[1];
-//		e->data.indices[i + 2].z = f_it->normals[2];
-//	}
+	if (e->mesh.has_vns)
+	{
+		e->data.indices[i].z = f_it->normals[0];
+		e->data.indices[i + 1].z = f_it->normals[1];
+		e->data.indices[i + 2].z = f_it->normals[2];
+	}
 }
 
 void 		process_quad(t_env *e, int i, t_f_lst *f_it)
@@ -48,15 +48,15 @@ void 		process_quad(t_env *e, int i, t_f_lst *f_it)
 		e->data.indices[i + 4].y = f_it->tex_cords[3];
 		e->data.indices[i + 5].y = f_it->tex_cords[0];
 	}
-//	if (e->mesh.has_vns)
-//	{
-//		e->data.indices[i].z = f_it->normals[0];
-//		e->data.indices[i + 1].z = f_it->normals[1];
-//		e->data.indices[i + 2].z = f_it->normals[2];
-//		e->data.indices[i + 3].z = f_it->normals[2];
-//		e->data.indices[i + 4].z = f_it->normals[3];
-//		e->data.indices[i + 5].z = f_it->normals[0];
-//	}
+	if (e->mesh.has_vns)
+	{
+		e->data.indices[i].z = f_it->normals[0];
+		e->data.indices[i + 1].z = f_it->normals[1];
+		e->data.indices[i + 2].z = f_it->normals[2];
+		e->data.indices[i + 3].z = f_it->normals[2];
+		e->data.indices[i + 4].z = f_it->normals[3];
+		e->data.indices[i + 5].z = f_it->normals[0];
+	}
 }
 
 void 		process_fdata(t_env *e)

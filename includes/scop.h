@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 12:31:15 by baudiber          #+#    #+#             */
-/*   Updated: 2020/11/01 20:07:15 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/11/02 16:15:10 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,31 +19,32 @@
 # include <libft.h>
 # include <libgraph.h>
 # include <GL/glew.h>
-# include "GLFW/glfw3.h"
+# include <GLFW/glfw3.h>
 # include <stdbool.h>
 # include <fcntl.h>
 # include <stdio.h>
 
-typedef struct s_env    t_env;
-typedef struct s_size   t_size;
-typedef struct s_mesh 	t_mesh;
-typedef struct s_vertex t_vertex;
-typedef struct s_v_lst t_v_lst;
-typedef struct s_f_lst t_f_lst;
-typedef struct s_vt_lst t_vt_lst;
-typedef struct s_vn_lst t_vn_lst;
-typedef struct s_vert_lst t_vert_lst;
-typedef struct s_raw_data t_raw_data;
-typedef struct s_list_iterators t_list_iterators;
+typedef struct s_env    			t_env;
+typedef struct s_size   			t_size;
+typedef struct s_mesh 				t_mesh;
+typedef struct s_vertex 			t_vertex;
+typedef struct s_v_lst 				t_v_lst;
+typedef struct s_f_lst 				t_f_lst;
+typedef struct s_vt_lst 			t_vt_lst;
+typedef struct s_vn_lst 			t_vn_lst;
+typedef struct s_vert_lst 			t_vert_lst;
+typedef struct s_raw_data 			t_raw_data;
+typedef struct s_list_iterators 	t_list_iterators;
 
 
 struct s_v_lst {
-	t_vec3 		pos;
-	t_v_lst 	*next;
+	t_vec3 			pos;
+	t_v_lst 		*next;
 };
 
 struct s_f_lst {
 	int 			indices[4];
+	int 			normals[4];
 	int 			tex_cords[4];
 	bool 			quad;
 	t_f_lst 		*next;
@@ -51,7 +52,7 @@ struct s_f_lst {
 
 struct s_vn_lst {
     t_vec3 			normals;
-    t_vt_lst 		*next;
+    t_vn_lst 		*next;
 };
 
 struct s_vt_lst {
@@ -62,6 +63,7 @@ struct s_vt_lst {
 struct s_size
 {
 	unsigned int 	v_nb;
+	unsigned int 	vn_nb;
 	unsigned int 	vt_nb;
 	unsigned int 	indice_nb;
 	unsigned int 	point_nb;
@@ -73,7 +75,7 @@ struct s_size
 struct s_vertex
 {
 	t_vec3 		pos;
-	//t_vec3 		normal;
+	t_vec3 		normal;
 	t_vec2 		text_coords;
 	unsigned int index;
 };
@@ -87,10 +89,10 @@ struct s_list_iterators {
     t_v_lst     *v_it;
     t_f_lst     *f_it;
     t_vt_lst    *vt_it;
-//    t_vn_lst    *vn_it;
+    t_vn_lst    *vn_it;
     int         v_nb;
     int         vt_nb;
- //   int         vn_nb;
+    int         vn_nb;
     int         i_nb;
 };
 
@@ -98,16 +100,16 @@ struct s_mesh
 {
 	t_vertex 		*verts;
 	unsigned int 	*index_buffer;
-	bool 			textured;
 	bool 			has_vts;
-	//bool 			has_vns;
+	bool 			has_vns;
 };
 
 struct s_raw_data
 {
 	t_vec3 			*v;
+	t_vec3 			*vn;
+	t_vec3_int 		*indices;
 	t_vec2 			*vt;
-	t_vec2_int 		*indices;
 };
 
 struct s_env
@@ -120,6 +122,7 @@ struct s_env
 	t_raw_data 		data;
 	t_v_lst 		*v_lst;
 	t_vt_lst 		*vt_lst;
+	t_vn_lst 		*vn_lst;
 	t_f_lst 		*f_lst;
 	t_vert_lst 		*vert_lst;
 	char 			*vertex_shader_src;
@@ -144,8 +147,8 @@ void 	clean_exit(const char *msg);
 void 	parse_obj(char *file_path, t_env *e);
 void    parse_face_line(const char *line, t_list_iterators *iterators);
 void    parse_face_line_vts(const char *line, t_list_iterators *iterators);
-//void    parse_face_line_vns(const char *line, t_list_iterators *iterators);
-//void    parse_face_line_vts_vns(const char *line, t_list_iterators *iterators);
+void    parse_face_line_vns(const char *line, t_list_iterators *iterators);
+void    parse_face_line_vts_vns(const char *line, t_list_iterators *iterators);
 void 	process_data(t_env *e);
 void    init_iterator_struct(t_list_iterators *iterators, t_env *e);
 bool        init_lists(t_env *e);
@@ -157,7 +160,7 @@ void 	create_vert_lst(t_env *e);
 void 		free_lists(t_env *e);
 void 		process_vdata(t_env *e);
 void 		process_vtdata(t_env *e);
-//void 		process_vndata(t_env *e);
+void 		process_vndata(t_env *e);
 void 		process_fdata(t_env *e);
 void 	malloc_vertices(t_env *e);
 void    free_raw_data(t_env *e);

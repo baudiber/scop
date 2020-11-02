@@ -10,6 +10,9 @@ int 	vert_already_exists(t_vertex vert, t_env *e)
         if (float_cmp(vert_it->v.pos.x, vert.pos.x) &&
             float_cmp(vert_it->v.pos.y, vert.pos.y) &&
             float_cmp(vert_it->v.pos.z, vert.pos.z) &&
+			float_cmp(vert_it->v.normal.x, vert.normal.x) &&
+			float_cmp(vert_it->v.normal.y, vert.normal.y) &&
+			float_cmp(vert_it->v.normal.z, vert.normal.z) &&
             float_cmp(vert_it->v.text_coords.x, vert.text_coords.x) &&
             float_cmp(vert_it->v.text_coords.y, vert.text_coords.y))
             return (vert_it->v.index);
@@ -51,14 +54,17 @@ void 	check_indices(int i, t_env *e)
     if (e->mesh.has_vts && (e->data.indices[i].y > (int)e->data_size.vt_nb
         || e->data.indices[i].y < 0))
         clean_exit("vt index problem");
+    if (e->mesh.has_vns && (e->data.indices[i].z > (int)e->data_size.vn_nb
+        || e->data.indices[i].z < 0))
+        clean_exit("vt index problem");
 }
 
 void 	create_vert_lst(t_env *e)
 {
-    int 		vert_nb;
-    unsigned int i;
-    t_vert_lst 	*vert_it;
-    t_vertex 	tmp_vert;
+    int 		 	vert_nb;
+    unsigned int 	i;
+    t_vert_lst 		*vert_it;
+    t_vertex 		tmp_vert;
 
     vert_nb = 0;
     vert_it = e->vert_lst;
@@ -68,9 +74,9 @@ void 	create_vert_lst(t_env *e)
         check_indices(i, e);
         tmp_vert.pos = e->data.v[e->data.indices[i].x - 1];
         tmp_vert.text_coords = (e->mesh.has_vts) ?
-                               e->data.vt[e->data.indices[i].y - 1] : vec2(0.0f, 0.0f);
-        //tmp_vert.normal = (e->mesh.has_vns) ?
-        //	e->data.vn[e->data.indices[i].z - 1] : vec3(0.0f, 0.0f, 0.0f);
+            e->data.vt[e->data.indices[i].y - 1] : vec2(0.0f, 0.0f);
+        tmp_vert.normal = (e->mesh.has_vns) ?
+        	e->data.vn[e->data.indices[i].z - 1] : vec3(0.0f, 0.0f, 0.0f);
         if (vert_nb == 0 || vert_already_exists(tmp_vert, e) < 0)
         {
             vert_it->next = add_vert_node(tmp_vert);

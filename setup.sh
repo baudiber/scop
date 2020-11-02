@@ -21,7 +21,7 @@ function mac_setup() {
 		fi
 	fi
 
-	sdl2=`echo $list | grep sdl2`
+	sdl2=`echo $list | grep glfw`
 	if [ $? -ne 0 ]
 	then
 		printf "$prefix sdl2 is missing.\n"

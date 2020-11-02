@@ -6,7 +6,7 @@
 /*   By: baudibert <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/23 15:11:36 by baudibert         #+#    #+#             */
-/*   Updated: 2020/10/28 23:49:35 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/11/02 15:57:17 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void read_lines(int fd, t_env *e)
 	e->data_size.indice_nb = iterators.i_nb;
 	e->data_size.v_nb = iterators.v_nb;
 	e->data_size.vt_nb = iterators.vt_nb;
-	//e->data_size.vn_nb = iterators.vn_nb;
+	e->data_size.vn_nb = iterators.vn_nb;
 	if (!iterators.v_nb || !iterators.i_nb)
 		clean_exit("file error, not enough vertice data to proceed\n");
 }

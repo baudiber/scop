@@ -33,6 +33,7 @@ SRC			=	scop.c							\
 				parser/process_data.c 			\
 				parser/process_face_data.c 			\
 				parser/vert_creation.c 			\
+				parser/normalize_mesh.c        \
 				parser/parsing.c 				\
 
 R			=	\033[31m

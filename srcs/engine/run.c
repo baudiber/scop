@@ -6,113 +6,11 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 15:05:14 by baudiber          #+#    #+#             */
-/*   Updated: 2020/11/02 15:00:04 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/11/02 17:26:59 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <scop.h>
-
-unsigned int compile_vertex_shader(t_env *e) {
-	unsigned int vertex_shader;
-	int success;
-	char info_log[512];
-
-	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertex_shader, 1, (const char* const *)&e->vertex_shader_src, NULL);
-	glCompileShader(vertex_shader);
-	glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(vertex_shader, 512, NULL, info_log);
-		ft_putstr("VERTEX SHADER COMPILE ERROR: ");
-		ft_putendl(info_log);
-		exit(0);
-	}
-	return vertex_shader;
-}
-
-unsigned int compile_fragment_shader(t_env *e) {
-	unsigned int fragment_shader;
-	int success;
-	char info_log[512];
-
-	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragment_shader, 1, (const char* const*)&e->fragment_shader_src, NULL);
-	glCompileShader(fragment_shader);
-	glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(fragment_shader, 512, NULL, info_log);
-		ft_putstr("FRAGMENT SHADER COMPILE ERROR: ");
-		ft_putendl(info_log);
-		exit(0);
-	}
-	return fragment_shader;
-}
-
-unsigned int compile_shader_program(unsigned int vertex_shader, unsigned int fragment_shader) {
-	unsigned int shader_program;
-	int success;
-	char info_log[512];
-
-	shader_program = glCreateProgram();
-	glAttachShader(shader_program, vertex_shader);
-	glAttachShader(shader_program, fragment_shader);
-	glLinkProgram(shader_program);
-	glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
-	if (!success)
-	{
-		glGetProgramInfoLog(shader_program, 512, NULL, info_log);
-		ft_putstr("SHADER PROGRAM LINKING ERROR: ");
-		ft_putendl(info_log);
-		exit(0);
-	}
-	return shader_program;
-}
-
-unsigned int compile_shaders(t_env *e) {
-	unsigned int vertex_shader;
-	unsigned int fragment_shader;
-	unsigned int shader_program;
-
-	vertex_shader = compile_vertex_shader(e);
-	fragment_shader = compile_fragment_shader(e);
-	shader_program = compile_shader_program(vertex_shader, fragment_shader);
-	glDeleteShader(vertex_shader);
-	glDeleteShader(fragment_shader);
-
-	return shader_program;
-}
-
-t_vec4 vec4(float x, float y, float z)
-{
-	t_vec4 ret;
-
-	ret.x = x;
-	ret.y = y;
-	ret.z = z;
-	ret.w = 1.0f;
-	return (ret);
-}
-
-t_vec3 vec3(float x, float y, float z)
-{
-	t_vec3 ret;
-
-	ret.x = x;
-	ret.y = y;
-	ret.z = z;
-	return (ret);
-}
-
-t_vec2 vec2(float x, float y)
-{
-	t_vec2 ret;
-
-	ret.x = x;
-	ret.y = y;
-	return (ret);
-}
 
 void setup_buffers(t_env *e)
 {
@@ -128,9 +26,14 @@ void setup_buffers(t_env *e)
 		* e->data_size.indice_nb , &e->mesh.index_buffer[0], GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (void*)0);
+    //glEnableVertexAttribArray(1);
+    //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (void*)sizeof(t_vec3));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(t_vertex),
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(t_vertex),
 		(void*)sizeof(t_vec3));
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(t_vertex),
+		(void*)(sizeof(t_vec3) * 2));
 }
 
 void generate_texture(t_env *e, int i, const char *path)

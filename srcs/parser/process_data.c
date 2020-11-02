@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 16:16:47 by baudiber          #+#    #+#             */
-/*   Updated: 2020/10/30 15:32:39 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/11/02 16:01:50 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,20 @@ void 		process_vtdata(t_env *e)
 	}
 }
 
-//void 		process_vndata(t_env *e)
-//{
-//	t_vn_lst 		*vn_it;
-//	int 			i;
-//
-//	vn_it = e->vn_lst->next;
-//	i = 0;
-//	while (vn_it)
-//	{
-//		e->data.vn[i] = vn_it->normals;
-//		vn_it = vn_it->next;
-//		i++;
-//	}
-//}
+void 		process_vndata(t_env *e)
+{
+	t_vn_lst 		*vn_it;
+	int 			i;
+
+	vn_it = e->vn_lst->next;
+	i = 0;
+	while (vn_it)
+	{
+		e->data.vn[i] = vn_it->normals;
+		vn_it = vn_it->next;
+		i++;
+	}
+}
 
 void 		process_vdata(t_env *e)
 {
