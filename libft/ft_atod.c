@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-double 	ft_atod(const char *str)
+double	ft_atod(const char *str)
 {
 	long	integer_part;
 	long	fractional_part;
@@ -33,6 +33,6 @@ double 	ft_atod(const char *str)
 	div = ft_pow(10, frac_len);
 	if (ft_strlen(split[0]) > 1 && split[0][0] == '-')
 		return (-1 * (integer_part + (fractional_part / div)));
-	else 
+	else
 		return (integer_part + (fractional_part / div));
 }

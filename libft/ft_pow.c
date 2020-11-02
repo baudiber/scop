@@ -17,7 +17,7 @@ double		ft_pow(double x, double y)
 	double	ret;
 
 	ret = x;
-	while(--y)
+	while (--y)
 		ret *= x;
 	return (ret);
 }
