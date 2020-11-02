@@ -6,7 +6,7 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 14:54:07 by baudiber          #+#    #+#             */
-/*   Updated: 2020/11/02 00:46:26 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/11/02 19:32:10 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ bool			parse_headers(int fd, int *w, int *h)
 {
 	ssize_t		ret;
 	t_headers	headers;
-	char        offset[200];
+	char		offset[200];
 
 	ret = read(fd, &headers, sizeof(t_headers));
 	if (headers.bits_per_pixel != 32 || headers.height < 0 || headers.width < 0)
@@ -86,7 +86,8 @@ unsigned char	*parse_pixels_alpha(int total_pixels, int fd)
 ** Return: img data in bytes
 */
 
-unsigned char	*parse_bmp_32bit(const char *file_path, int *w, int *h, int alpha)
+unsigned char	*parse_bmp_32bit(const char *file_path, int *w, int *h,
+	int alpha)
 {
 	int			fd;
 
@@ -94,7 +95,7 @@ unsigned char	*parse_bmp_32bit(const char *file_path, int *w, int *h, int alpha)
 		return (NULL);
 	if ((fd = open(file_path, O_RDONLY)) < 0)
 	{
-    	fprintf( stderr, "errno is %d\n", errno );
+		fprintf(stderr, "errno is %d\n", errno);
 		return (NULL);
 	}
 	if (!parse_headers(fd, w, h))

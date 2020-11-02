@@ -6,13 +6,13 @@
 /*   By: baudiber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 14:09:37 by baudiber          #+#    #+#             */
-/*   Updated: 2020/11/02 00:50:43 by baudibert        ###   ########.fr       */
+/*   Updated: 2020/11/02 19:28:10 by baudibert        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include <scop.h>
+#include <scop.h>
 
-void 	set_shading(int shading)
+void	set_shading(int shading)
 {
 	t_env *e;
 
@@ -20,11 +20,11 @@ void 	set_shading(int shading)
 	if (shading < 2)
 		e->transition = 0.0f;
 	if (shading >= 2 && !e->mesh.has_vts)
-		return;
+		return ;
 	e->shading = shading;
 }
 
-void 	movement(int dir)
+void	movement(int dir)
 {
 	t_env *e;
 
@@ -43,23 +43,23 @@ void 	movement(int dir)
 		e->camera.z -= 0.1f;
 }
 
-void process_movement(GLFWwindow *window)
+void	process_movement(GLFWwindow *window)
 {
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-        movement(0);
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-        movement(1);
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-        movement(2);
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-        movement(3);
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        movement(4);
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        movement(5);
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+		movement(0);
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+		movement(1);
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+		movement(2);
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+		movement(3);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		movement(4);
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		movement(5);
 }
 
-void process_inputs(GLFWwindow *window)
+void	process_inputs(GLFWwindow *window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
