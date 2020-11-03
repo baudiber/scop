@@ -5,7 +5,9 @@
 **Compiles on:** macOS Linux  
 Run _setup.sh_ to install dependencies (glfw, glew)
 
-WAVEFRONT .OBJ parsing and display with a 360 rotation
+Parses .obj files and display the model with a 360 rotation
+
+Supported: vts and vns ~materials~
 
 ![Alt text](./screenshots/teapot_normals.png?raw=true "teapot")
 ![Alt text](./screenshots/grass_cube.png?raw=true "cube")
