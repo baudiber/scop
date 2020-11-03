@@ -1,6 +1,6 @@
 # scop (42 Subject) 
 
-## WAVEFRONT.OBJ reader in C
+## WAVEFRONT .OBJ reader in C
 
 **Compiles on:** macOS Linux  
 Run _setup.sh_ to install dependencies (glfw, glew)
